@@ -156,6 +156,9 @@ AutoToxic.MouseButton1Click:Connect(function()
 	end
 end)
 
+local isNoclipping = false
+local noclipConnection
+
 Uninject.Name = "Uninject"
 Uninject.Parent = Frame
 Uninject.BackgroundColor3 = Color3.fromRGB(0,0,0)
@@ -173,6 +176,9 @@ Uninject.MouseButton1Click:Connect(function()
 	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
 	isAutoToxicEnabled = false
 	game.Workspace.CurrentCamera.FieldOfView = 70
+	NOFLY()
+	isNoclipping = false
+	noclipConnection:Disconnect()
 	YTScriptHub:Destroy()
 end)
 
@@ -206,8 +212,6 @@ NoClip.TextSize = 14.000
 NoClip.TextWrapped = true
 
 
-local isNoclipping = false
-local noclipConnection
 
 local function NoclipLoop()
 	if isNoclipping and game.Players.LocalPlayer.Character ~= nil then 
