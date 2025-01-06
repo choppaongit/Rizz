@@ -1,3 +1,4 @@
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("YOU FINNA GET RIZZED UP", "All")
 local YTScriptHub = Instance.new("ScreenGui")
 local Frame = Instance.new("TextLabel")
 local TextLabel = Instance.new("TextLabel")
@@ -133,7 +134,7 @@ local autoToxicCoroutine -- reference to the coroutine that sends the message re
 -- function that sends the "Blackerson On Top" message repeatedly
 local function sendAutoToxicMessage()
 	while isAutoToxicEnabled do
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("imagine playing " .. GameName ..  " Get Rizzed With Rizz Hub", "All")
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Get Rizzed With RizzHub", "All")
 		wait(2)
 	end
 end
