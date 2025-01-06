@@ -1,4 +1,4 @@
-game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("YOU FINNA GET RIZZED UP", "All")
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("YALL FINNA GET RIZZED UP", "All")
 local YTScriptHub = Instance.new("ScreenGui")
 local Frame = Instance.new("TextLabel")
 local TextLabel = Instance.new("TextLabel")
@@ -9,10 +9,12 @@ local AutoToxic = Instance.new("TextButton")
 local Uninject = Instance.new("TextButton")
 local InfJump = Instance.new("TextButton")
 local FlyBtn = Instance.new("TextButton")
+local ESP = Instance.new("TextButton")
 local RunService = game:GetService("RunService")
 local NoClip = Instance.new("TextButton")
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 local UserInputServer = game:GetService("UserInputService")
+COREGUI = (game:GetService("CoreGui"))
 
 function getRoot(char)
 	local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
@@ -134,7 +136,7 @@ local autoToxicCoroutine -- reference to the coroutine that sends the message re
 -- function that sends the "Blackerson On Top" message repeatedly
 local function sendAutoToxicMessage()
 	while isAutoToxicEnabled do
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Get Rizzed With RizzHub", "All")
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Get Rizzed With RizzHub | RizzHub On Top", "All")
 		wait(2)
 	end
 end
@@ -183,8 +185,11 @@ Uninject.MouseButton1Click:Connect(function()
 	game.Workspace.CurrentCamera.FieldOfView = 70
 	FLYING = false
 	isNoclipping = false
-	infJumpDebounce = false
-	YTScriptHub:Destroy()
+	if infJump then infJump:Disconnect()
+	isAutoToxicEnabled = false
+	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Couldn't rizz you today... :( ill get you next time", "All")
+		YTScriptHub:Destroy()
+		end
 end)
 
 InfJump.Name = "InfJump"
@@ -386,3 +391,274 @@ UserInputServer.InputBegan:Connect(function(input, gameProcessedEvent)
 		end
 	end
 end)
+
+espTransparency = 0.3
+ESPenabled = false
+CHMSenabled = false
+
+ESP.Name = "Esp"
+ESP.Parent = Frame
+ESP.BackgroundColor3 = Color3.fromRGB(0,0,0)
+ESP.Position = UDim2.new(0.683, 0,0.697, 0)
+ESP.Size = UDim2.new(0, 223,0, 62)
+ESP.Font = Enum.Font.Sarpanch
+ESP.Text = "Esp"
+ESP.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESP.TextScaled = true
+ESP.TextSize = 14.000
+ESP.TextWrapped = true
+
+
+ESP.MouseButton1Click:Connect(function()
+
+end)
+
+function round(num, numDecimalPlaces)
+	local mult = 10^(numDecimalPlaces or 0)
+	return math.floor(num * mult + 0.5) / mult
+end
+
+function ESP(plr)
+	task.spawn(function()
+		for i,v in pairs(COREGUI:GetChildren()) do
+			if v.Name == plr.Name..'_ESP' then
+				v:Destroy()
+			end
+		end
+		wait()
+		if plr.Character and plr.Name ~= Players.LocalPlayer.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
+			local ESPholder = Instance.new("Folder")
+			ESPholder.Name = plr.Name..'_ESP'
+			ESPholder.Parent = COREGUI
+			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+			for b,n in pairs (plr.Character:GetChildren()) do
+				if (n:IsA("BasePart")) then
+					local a = Instance.new("BoxHandleAdornment")
+					a.Name = plr.Name
+					a.Parent = ESPholder
+					a.Adornee = n
+					a.AlwaysOnTop = true
+					a.ZIndex = 10
+					a.Size = n.Size
+					a.Transparency = espTransparency
+					a.Color = plr.TeamColor
+				end
+			end
+			if plr.Character and plr.Character:FindFirstChild('Head') then
+				local BillboardGui = Instance.new("BillboardGui")
+				local TextLabel = Instance.new("TextLabel")
+				BillboardGui.Adornee = plr.Character.Head
+				BillboardGui.Name = plr.Name
+				BillboardGui.Parent = ESPholder
+				BillboardGui.Size = UDim2.new(0, 100, 0, 150)
+				BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
+				BillboardGui.AlwaysOnTop = true
+				TextLabel.Parent = BillboardGui
+				TextLabel.BackgroundTransparency = 1
+				TextLabel.Position = UDim2.new(0, 0, 0, -50)
+				TextLabel.Size = UDim2.new(0, 100, 0, 100)
+				TextLabel.Font = Enum.Font.SourceSansSemibold
+				TextLabel.TextSize = 20
+				TextLabel.TextColor3 = Color3.new(1, 1, 1)
+				TextLabel.TextStrokeTransparency = 0
+				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
+				TextLabel.Text = 'Name: '..plr.Name
+				TextLabel.ZIndex = 10
+				local espLoopFunc
+				local teamChange
+				local addedFunc
+				addedFunc = plr.CharacterAdded:Connect(function()
+					if ESPenabled then
+						espLoopFunc:Disconnect()
+						teamChange:Disconnect()
+						ESPholder:Destroy()
+						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+						ESP(plr)
+						addedFunc:Disconnect()
+					else
+						teamChange:Disconnect()
+						addedFunc:Disconnect()
+					end
+				end)
+				teamChange = plr:GetPropertyChangedSignal("TeamColor"):Connect(function()
+					if ESPenabled then
+						espLoopFunc:Disconnect()
+						addedFunc:Disconnect()
+						ESPholder:Destroy()
+						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+						ESP(plr)
+						teamChange:Disconnect()
+					else
+						teamChange:Disconnect()
+					end
+				end)
+				local function espLoop()
+					if COREGUI:FindFirstChild(plr.Name..'_ESP') then
+						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid") and Players.LocalPlayer.Character and getRoot(Players.LocalPlayer.Character) and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+							local pos = math.floor((getRoot(Players.LocalPlayer.Character).Position - getRoot(plr.Character).Position).magnitude)
+							TextLabel.Text = 'Name: '..plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass('Humanoid').Health, 1)..' | Studs: '..pos
+						end
+					else
+						teamChange:Disconnect()
+						addedFunc:Disconnect()
+						espLoopFunc:Disconnect()
+					end
+				end
+				espLoopFunc = RunService.RenderStepped:Connect(espLoop)
+			end
+		end
+	end)
+end
+
+function CHMS(plr)
+	task.spawn(function()
+		for i,v in pairs(COREGUI:GetChildren()) do
+			if v.Name == plr.Name..'_CHMS' then
+				v:Destroy()
+			end
+		end
+		wait()
+		if plr.Character and plr.Name ~= Players.LocalPlayer.Name and not COREGUI:FindFirstChild(plr.Name..'_CHMS') then
+			local ESPholder = Instance.new("Folder")
+			ESPholder.Name = plr.Name..'_CHMS'
+			ESPholder.Parent = COREGUI
+			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+			for b,n in pairs (plr.Character:GetChildren()) do
+				if (n:IsA("BasePart")) then
+					local a = Instance.new("BoxHandleAdornment")
+					a.Name = plr.Name
+					a.Parent = ESPholder
+					a.Adornee = n
+					a.AlwaysOnTop = true
+					a.ZIndex = 10
+					a.Size = n.Size
+					a.Transparency = espTransparency
+					a.Color = plr.TeamColor
+				end
+			end
+			local addedFunc
+			local teamChange
+			local CHMSremoved
+			addedFunc = plr.CharacterAdded:Connect(function()
+				if CHMSenabled then
+					ESPholder:Destroy()
+					teamChange:Disconnect()
+					repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+					CHMS(plr)
+					addedFunc:Disconnect()
+				else
+					teamChange:Disconnect()
+					addedFunc:Disconnect()
+				end
+			end)
+			teamChange = plr:GetPropertyChangedSignal("TeamColor"):Connect(function()
+				if CHMSenabled then
+					ESPholder:Destroy()
+					addedFunc:Disconnect()
+					repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+					CHMS(plr)
+					teamChange:Disconnect()
+				else
+					teamChange:Disconnect()
+				end
+			end)
+			CHMSremoved = ESPholder.AncestryChanged:Connect(function()
+				teamChange:Disconnect()
+				addedFunc:Disconnect()
+				CHMSremoved:Disconnect()
+			end)
+		end
+	end)
+end
+
+function Locate(plr)
+	task.spawn(function()
+		for i,v in pairs(COREGUI:GetChildren()) do
+			if v.Name == plr.Name..'_LC' then
+				v:Destroy()
+			end
+		end
+		wait()
+		if plr.Character and plr.Name ~= Players.LocalPlayer.Name and not COREGUI:FindFirstChild(plr.Name..'_LC') then
+			local ESPholder = Instance.new("Folder")
+			ESPholder.Name = plr.Name..'_LC'
+			ESPholder.Parent = COREGUI
+			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+			for b,n in pairs (plr.Character:GetChildren()) do
+				if (n:IsA("BasePart")) then
+					local a = Instance.new("BoxHandleAdornment")
+					a.Name = plr.Name
+					a.Parent = ESPholder
+					a.Adornee = n
+					a.AlwaysOnTop = true
+					a.ZIndex = 10
+					a.Size = n.Size
+					a.Transparency = espTransparency
+					a.Color = plr.TeamColor
+				end
+			end
+			if plr.Character and plr.Character:FindFirstChild('Head') then
+				local BillboardGui = Instance.new("BillboardGui")
+				local TextLabel = Instance.new("TextLabel")
+				BillboardGui.Adornee = plr.Character.Head
+				BillboardGui.Name = plr.Name
+				BillboardGui.Parent = ESPholder
+				BillboardGui.Size = UDim2.new(0, 100, 0, 150)
+				BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
+				BillboardGui.AlwaysOnTop = true
+				TextLabel.Parent = BillboardGui
+				TextLabel.BackgroundTransparency = 1
+				TextLabel.Position = UDim2.new(0, 0, 0, -50)
+				TextLabel.Size = UDim2.new(0, 100, 0, 100)
+				TextLabel.Font = Enum.Font.SourceSansSemibold
+				TextLabel.TextSize = 20
+				TextLabel.TextColor3 = Color3.new(1, 1, 1)
+				TextLabel.TextStrokeTransparency = 0
+				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
+				TextLabel.Text = 'Name: '..plr.Name
+				TextLabel.ZIndex = 10
+				local lcLoopFunc
+				local addedFunc
+				local teamChange
+				addedFunc = plr.CharacterAdded:Connect(function()
+					if ESPholder ~= nil and ESPholder.Parent ~= nil then
+						lcLoopFunc:Disconnect()
+						teamChange:Disconnect()
+						ESPholder:Destroy()
+						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+						Locate(plr)
+						addedFunc:Disconnect()
+					else
+						teamChange:Disconnect()
+						addedFunc:Disconnect()
+					end
+				end)
+				teamChange = plr:GetPropertyChangedSignal("TeamColor"):Connect(function()
+					if ESPholder ~= nil and ESPholder.Parent ~= nil then
+						lcLoopFunc:Disconnect()
+						addedFunc:Disconnect()
+						ESPholder:Destroy()
+						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
+						Locate(plr)
+						teamChange:Disconnect()
+					else
+						teamChange:Disconnect()
+					end
+				end)
+				local function lcLoop()
+					if COREGUI:FindFirstChild(plr.Name..'_LC') then
+						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid") and Players.LocalPlayer.Character and getRoot(Players.LocalPlayer.Character) and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+							local pos = math.floor((getRoot(Players.LocalPlayer.Character).Position - getRoot(plr.Character).Position).magnitude)
+							TextLabel.Text = 'Name: '..plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass('Humanoid').Health, 1)..' | Studs: '..pos
+						end
+					else
+						teamChange:Disconnect()
+						addedFunc:Disconnect()
+						lcLoopFunc:Disconnect()
+					end
+				end
+				lcLoopFunc = RunService.RenderStepped:Connect(lcLoop)
+			end
+		end
+	end)
+end
