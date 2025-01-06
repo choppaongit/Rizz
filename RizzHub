@@ -124,7 +124,7 @@ AutoToxic.BackgroundColor3 = Color3.fromRGB(0,0,0)
 AutoToxic.Position = UDim2.new(0.685, 0,0.306, 0)
 AutoToxic.Size = UDim2.new(0, 223,0, 62)
 AutoToxic.Font = Enum.Font.Sarpanch
-AutoToxic.Text = "AutoToxic"
+AutoToxic.Text = "AutoToxic(legacy chat)"
 AutoToxic.TextColor3 = Color3.fromRGB(255, 255, 255)
 AutoToxic.TextScaled = true
 AutoToxic.TextSize = 14.000
@@ -192,7 +192,6 @@ Uninject.MouseButton1Click:Connect(function()
 	if infJump then infJump:Disconnect()
 	end
 	isAutoToxicEnabled = false
-	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Couldn't rizz you today... :( ill get you next time", "All")
 	YTScriptHub:Destroy()
 end)
 
