@@ -178,7 +178,6 @@ Uninject.MouseButton1Click:Connect(function()
 	game.Workspace.CurrentCamera.FieldOfView = 70
 	FLYING = false
 	isNoclipping = false
-	noclipConnection:Disconnect()
 	YTScriptHub:Destroy()
 end)
 
