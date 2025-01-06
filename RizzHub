@@ -1,0 +1,358 @@
+local YTScriptHub = Instance.new("ScreenGui")
+local Frame = Instance.new("TextLabel")
+local TextLabel = Instance.new("TextLabel")
+local BloodGui = Instance.new("TextButton")
+local Fov = Instance.new("TextButton")
+local HigherJump = Instance.new("TextButton")
+local AutoToxic = Instance.new("TextButton")
+local Uninject = Instance.new("TextButton")
+local InfJump = Instance.new("TextButton")
+local FlyBtn = Instance.new("TextButton")
+local RunService = game:GetService("RunService")
+local NoClip = Instance.new("TextButton")
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+
+function getRoot(char)
+	local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
+	return rootPart
+end
+
+--Properties:
+
+YTScriptHub.Name = "RizzHub"
+YTScriptHub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+YTScriptHub.ResetOnSpawn = false
+YTScriptHub.IgnoreGuiInset = false
+
+Frame.Parent = YTScriptHub
+Frame.BackgroundColor3 = Color3.fromRGB(39, 39, 39)
+Frame.Position = UDim2.new(0.174, 0,0.084, 0)
+Frame.Size = UDim2.new(0, 707,0, 364)
+Frame.Active = true
+Frame.Draggable = true
+Frame.BorderColor3 = Color3.fromRGB(39, 39, 39)
+Frame.BackgroundTransparency = 0
+
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.Size = UDim2.new(0, 107,0, 26)
+TextLabel.Font = Enum.Font.Sarpanch
+TextLabel.Text = "Rizz Hub"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextScaled = true
+TextLabel.TextSize = 14.000
+TextLabel.TextWrapped = true
+
+BloodGui.Name = "Sprint"
+BloodGui.Parent = Frame
+BloodGui.BackgroundColor3 = Color3.fromRGB(0,0,0)
+BloodGui.Position = UDim2.new(-0.001, 0,0.111, 0)
+BloodGui.Size = UDim2.new(0, 223,0, 62)
+BloodGui.Font = Enum.Font.Sarpanch
+BloodGui.Text = "Speed"
+BloodGui.TextColor3 = Color3.fromRGB(255, 255, 255)
+BloodGui.TextScaled = true
+BloodGui.TextSize = 14.000
+BloodGui.TextWrapped = true
+
+local isFast = false
+BloodGui.MouseButton1Click:Connect(function()
+	if isFast then
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+	else
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 30
+	end
+	isFast = not isFast
+end)
+
+Fov.Name = "Fov"
+Fov.Parent = Frame
+Fov.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Fov.Position = UDim2.new(0.683, 0,0.111, 0)
+Fov.Size = UDim2.new(0, 223,0, 62)
+Fov.Font = Enum.Font.Sarpanch
+Fov.Text = "Fov"
+Fov.TextColor3 = Color3.fromRGB(255, 255, 255)
+Fov.TextScaled = true
+Fov.TextSize = 14.000
+Fov.TextWrapped = true
+
+local fovValue = 70
+
+Fov.MouseButton1Click:Connect(function()
+	if fovValue == 70 then
+		fovValue = 120
+	else
+		fovValue = 70
+	end
+	game.Workspace.CurrentCamera.FieldOfView = fovValue
+end)
+
+HigherJump.Name = "HigherJump"
+HigherJump.Parent = Frame
+HigherJump.BackgroundColor3 = Color3.fromRGB(0,0,0)
+HigherJump.Position = UDim2.new(-0.001, 0,0.306, 0)
+HigherJump.Size = UDim2.new(0, 223,0, 62)
+HigherJump.Font = Enum.Font.Sarpanch
+HigherJump.Text = "HigherJump"
+HigherJump.TextColor3 = Color3.fromRGB(255, 255, 255)
+HigherJump.TextScaled = true
+HigherJump.TextSize = 14.000
+HigherJump.TextWrapped = true
+
+local isHigherJump = false
+
+local function toggleHigherJump()
+	if isHigherJump then
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
+	else
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 100 
+	end
+	isHigherJump = not isHigherJump
+end
+
+HigherJump.MouseButton1Click:Connect(toggleHigherJump)
+
+AutoToxic.Name = "AutoToxic"
+AutoToxic.Parent = Frame
+AutoToxic.BackgroundColor3 = Color3.fromRGB(0,0,0)
+AutoToxic.Position = UDim2.new(0.685, 0,0.306, 0)
+AutoToxic.Size = UDim2.new(0, 223,0, 62)
+AutoToxic.Font = Enum.Font.Sarpanch
+AutoToxic.Text = "AutoToxic"
+AutoToxic.TextColor3 = Color3.fromRGB(255, 255, 255)
+AutoToxic.TextScaled = true
+AutoToxic.TextSize = 14.000
+AutoToxic.TextWrapped = true
+
+local isAutoToxicEnabled = false -- track whether the AutoToxic feature is enabled or not
+local autoToxicCoroutine -- reference to the coroutine that sends the message repeatedly
+
+-- function that sends the "Blackerson On Top" message repeatedly
+local function sendAutoToxicMessage()
+	while isAutoToxicEnabled do
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("imagine playing " .. GameName ..  " Get Rizzed With Rizz Hub", "All")
+		wait(2)
+	end
+end
+
+-- handle the AutoToxic button click
+AutoToxic.MouseButton1Click:Connect(function()
+	isAutoToxicEnabled = not isAutoToxicEnabled -- toggle the feature status
+
+	if isAutoToxicEnabled then
+		-- start the coroutine if it's not running
+		if not autoToxicCoroutine then
+			autoToxicCoroutine = coroutine.create(sendAutoToxicMessage)
+			coroutine.resume(autoToxicCoroutine)
+		end
+	else
+		-- stop the coroutine if it's running
+		if autoToxicCoroutine then
+			coroutine.yield(autoToxicCoroutine)
+			autoToxicCoroutine = nil
+		end
+	end
+end)
+
+Uninject.Name = "Uninject"
+Uninject.Parent = Frame
+Uninject.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Uninject.Position = UDim2.new(0.314, 0,0.889, 0)
+Uninject.Size = UDim2.new(0, 223,0, 62)
+Uninject.Font = Enum.Font.Sarpanch
+Uninject.Text = "Uninject"
+Uninject.TextColor3 = Color3.fromRGB(255, 255, 255)
+Uninject.TextScaled = true
+Uninject.TextSize = 14.000
+Uninject.TextWrapped = true
+
+Uninject.MouseButton1Click:Connect(function()
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
+	isAutoToxicEnabled = false
+	game.Workspace.CurrentCamera.FieldOfView = 70
+	YTScriptHub:Destroy()
+end)
+
+InfJump.Name = "InfJump"
+InfJump.Parent = Frame
+InfJump.BackgroundColor3 = Color3.fromRGB(0,0,0)
+InfJump.Position = UDim2.new(-0.001, 0,0.504, 0)
+InfJump.Size = UDim2.new(0, 233,0, 62)
+InfJump.Font = Enum.Font.Sarpanch
+InfJump.Text = "InfJump"
+InfJump.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfJump.TextScaled = true
+InfJump.TextSize = 14.000
+InfJump.TextWrapped = true
+
+
+InfJump.MouseButton1Click:Connect(function()
+
+end)
+
+NoClip.Name = "NoClip"
+NoClip.Parent = Frame
+NoClip.BackgroundColor3 = Color3.fromRGB(0,0,0)
+NoClip.Position = UDim2.new(0.685, 0,0.504, 0)
+NoClip.Size = UDim2.new(0, 223,0, 62)
+NoClip.Font = Enum.Font.Sarpanch
+NoClip.Text = "NoClip"
+NoClip.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoClip.TextScaled = true
+NoClip.TextSize = 14.000
+NoClip.TextWrapped = true
+
+local isNoclipping = false
+local noclipConnection
+
+local function NoclipLoop()
+	if isNoclipping and game.Players.LocalPlayer.Character ~= nil then
+		for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+			if child:IsA("BasePart") then
+				child.CanCollide = false
+			end
+		end
+	else
+		for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+			if child:IsA("BasePart") then
+				child.CanCollide = true
+			end
+		end
+	end
+end
+
+NoClip.MouseButton1Click:Connect(function()
+	isNoclipping = not isNoclipping
+
+	if noclipConnection then
+		noclipConnection:Disconnect()
+	end
+
+	noclipConnection = RunService.Stepped:Connect(NoclipLoop)
+end)
+
+FlyBtn.Name = "Fly"
+FlyBtn.Parent = Frame
+FlyBtn.BackgroundColor3 = Color3.fromRGB(0,0,0)
+FlyBtn.Position = UDim2.new(-0.001, 0,0.697, 0)
+FlyBtn.Size = UDim2.new(0, 223,0, 62)
+FlyBtn.Font = Enum.Font.Sarpanch
+FlyBtn.Text = "Fly"
+FlyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+FlyBtn.TextScaled = true
+FlyBtn.TextSize = 14.000
+FlyBtn.TextWrapped = true
+
+
+FlyBtn.MouseButton1Click:Connect(function()
+	FLYING = not FLYING -- Toggle flying state
+
+	if FLYING then
+		sFLY(true) -- Enable fly mode with vehicle speed
+	else
+		NOFLY() -- Disable fly mode
+	end
+end)
+
+FLYING = false
+local Players = game.Players
+IYMouse = Players.LocalPlayer:GetMouse()
+QEfly = true
+iyflyspeed = 1
+vehicleflyspeed = 1
+function sFLY(vfly)
+	repeat wait() until Players.LocalPlayer and Players.LocalPlayer.Character and getRoot(Players.LocalPlayer.Character) and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	repeat wait() until IYMouse
+	if flyKeyDown or flyKeyUp then flyKeyDown:Disconnect() flyKeyUp:Disconnect() end
+
+	local T = getRoot(Players.LocalPlayer.Character)
+	local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+	local lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+	local SPEED = 0
+
+	local function FLY()
+		FLYING = true
+		local BG = Instance.new('BodyGyro')
+		local BV = Instance.new('BodyVelocity')
+		BG.P = 9e4
+		BG.Parent = T
+		BV.Parent = T
+		BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+		BG.cframe = T.CFrame
+		BV.velocity = Vector3.new(0, 0, 0)
+		BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+		task.spawn(function()
+			repeat wait()
+				if not vfly and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+					Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = true
+				end
+				if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0 then
+					SPEED = 50
+				elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0) and SPEED ~= 0 then
+					SPEED = 0
+				end
+				if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 or (CONTROL.Q + CONTROL.E) ~= 0 then
+					BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+					lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
+				elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and (CONTROL.Q + CONTROL.E) == 0 and SPEED ~= 0 then
+					BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+				else
+					BV.velocity = Vector3.new(0, 0, 0)
+				end
+				BG.cframe = workspace.CurrentCamera.CoordinateFrame
+			until not FLYING
+			CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+			lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+			SPEED = 0
+			BG:Destroy()
+			BV:Destroy()
+			if Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+				Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+			end
+		end)
+	end
+	flyKeyDown = IYMouse.KeyDown:Connect(function(KEY)
+		if KEY:lower() == 'w' then
+			CONTROL.F = (vfly and vehicleflyspeed or iyflyspeed)
+		elseif KEY:lower() == 's' then
+			CONTROL.B = - (vfly and vehicleflyspeed or iyflyspeed)
+		elseif KEY:lower() == 'a' then
+			CONTROL.L = - (vfly and vehicleflyspeed or iyflyspeed)
+		elseif KEY:lower() == 'd' then 
+			CONTROL.R = (vfly and vehicleflyspeed or iyflyspeed)
+		elseif QEfly and KEY:lower() == 'e' then
+			CONTROL.Q = (vfly and vehicleflyspeed or iyflyspeed)*2
+		elseif QEfly and KEY:lower() == 'q' then
+			CONTROL.E = -(vfly and vehicleflyspeed or iyflyspeed)*2
+		end
+		pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Track end)
+	end)
+	flyKeyUp = IYMouse.KeyUp:Connect(function(KEY)
+		if KEY:lower() == 'w' then
+			CONTROL.F = 0
+		elseif KEY:lower() == 's' then
+			CONTROL.B = 0
+		elseif KEY:lower() == 'a' then
+			CONTROL.L = 0
+		elseif KEY:lower() == 'd' then
+			CONTROL.R = 0
+		elseif KEY:lower() == 'e' then
+			CONTROL.Q = 0
+		elseif KEY:lower() == 'q' then
+			CONTROL.E = 0
+		end
+	end)
+	FLY()
+end
+
+function NOFLY()
+	FLYING = false
+	if flyKeyDown or flyKeyUp then flyKeyDown:Disconnect() flyKeyUp:Disconnect() end
+	if Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+		Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+	end
+	pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Custom end)
+end
