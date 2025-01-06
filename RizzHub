@@ -141,6 +141,7 @@ local function sendAutoToxicMessage()
 	end
 end
 
+
 -- handle the AutoToxic button click
 AutoToxic.MouseButton1Click:Connect(function()
 	isAutoToxicEnabled = not isAutoToxicEnabled -- toggle the feature status
@@ -163,6 +164,8 @@ end)
 local isNoclipping = false
 local noclipConnection
 
+local espEnabled = false
+
 local infJump
 infJumpDebounce = false
 
@@ -184,6 +187,7 @@ Uninject.MouseButton1Click:Connect(function()
 	isAutoToxicEnabled = false
 	game.Workspace.CurrentCamera.FieldOfView = 70
 	FLYING = false
+	espEnabled = false
 	isNoclipping = false
 	if infJump then infJump:Disconnect()
 	end
@@ -409,8 +413,31 @@ ESP.TextSize = 14.000
 ESP.TextWrapped = true
 
 
-ESP.MouseButton1Click:Connect(function()
 
+
+ESP.MouseButton1Click:Connect(function()
+	-- Toggle the espEnabled variable
+	espEnabled = not espEnabled
+
+	-- Clear existing ESP if disabling
+	if not espEnabled then
+		for _, plr in ipairs(Players:GetPlayers()) do
+			if plr ~= Players.LocalPlayer then
+				for _, child in ipairs(COREGUI:GetChildren()) do
+					if child.Name == plr.Name .. "_ESP" then
+						child:Destroy()
+					end
+				end
+			end
+		end
+	end
+
+	-- Enable/Disable ESP for all players
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= Players.LocalPlayer and espEnabled then
+			ESP(plr) 
+		end
+	end
 end)
 
 function round(num, numDecimalPlaces)
@@ -462,7 +489,7 @@ function ESP(plr)
 				TextLabel.TextColor3 = Color3.new(1, 1, 1)
 				TextLabel.TextStrokeTransparency = 0
 				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-				TextLabel.Text = 'Name: '..plr.Name
+				TextLabel.Text = plr.Name
 				TextLabel.ZIndex = 10
 				local espLoopFunc
 				local teamChange
@@ -496,7 +523,6 @@ function ESP(plr)
 					if COREGUI:FindFirstChild(plr.Name..'_ESP') then
 						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid") and Players.LocalPlayer.Character and getRoot(Players.LocalPlayer.Character) and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
 							local pos = math.floor((getRoot(Players.LocalPlayer.Character).Position - getRoot(plr.Character).Position).magnitude)
-							TextLabel.Text = 'Name: '..plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass('Humanoid').Health, 1)..' | Studs: '..pos
 						end
 					else
 						teamChange:Disconnect()
