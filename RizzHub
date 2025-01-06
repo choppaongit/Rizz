@@ -11,6 +11,7 @@ local FlyBtn = Instance.new("TextButton")
 local RunService = game:GetService("RunService")
 local NoClip = Instance.new("TextButton")
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+local UserInputServer = game:GetService("UserInputService")
 
 function getRoot(char)
 	local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
@@ -159,6 +160,9 @@ end)
 local isNoclipping = false
 local noclipConnection
 
+local infJump
+infJumpDebounce = false
+
 Uninject.Name = "Uninject"
 Uninject.Parent = Frame
 Uninject.BackgroundColor3 = Color3.fromRGB(0,0,0)
@@ -178,6 +182,7 @@ Uninject.MouseButton1Click:Connect(function()
 	game.Workspace.CurrentCamera.FieldOfView = 70
 	FLYING = false
 	isNoclipping = false
+	infJump:Disconnect()
 	YTScriptHub:Destroy()
 end)
 
@@ -194,8 +199,18 @@ InfJump.TextSize = 14.000
 InfJump.TextWrapped = true
 
 
-InfJump.MouseButton1Click:Connect(function()
 
+InfJump.MouseButton1Click:Connect(function()
+		if infJump then infJump:Disconnect() end
+		infJumpDebounce = false
+		infJump = UserInputServer.JumpRequest:Connect(function()
+			if not infJumpDebounce then
+				infJumpDebounce = true
+				game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+				wait()
+			infJumpDebounce = false
+			end
+	end)
 end)
 
 NoClip.Name = "NoClip"
