@@ -182,7 +182,7 @@ Uninject.MouseButton1Click:Connect(function()
 	game.Workspace.CurrentCamera.FieldOfView = 70
 	FLYING = false
 	isNoclipping = false
-	infJump:Disconnect()
+	infJumpDebounce = false
 	YTScriptHub:Destroy()
 end)
 
@@ -371,3 +371,17 @@ function NOFLY()
 	end
 	pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Custom end)
 end
+
+UserInputServer.InputBegan:Connect(function(input, gameProcessedEvent)
+	if gameProcessedEvent then 
+		return 
+	end
+
+	if input.KeyCode == Enum.KeyCode.LeftShift then
+		if Frame.Visible == true then
+			Frame.Visible = false
+		else
+			Frame.Visible = true
+		end
+	end
+end)
