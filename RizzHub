@@ -186,10 +186,10 @@ Uninject.MouseButton1Click:Connect(function()
 	FLYING = false
 	isNoclipping = false
 	if infJump then infJump:Disconnect()
+	end
 	isAutoToxicEnabled = false
 	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Couldn't rizz you today... :( ill get you next time", "All")
-		YTScriptHub:Destroy()
-		end
+	YTScriptHub:Destroy()
 end)
 
 InfJump.Name = "InfJump"
