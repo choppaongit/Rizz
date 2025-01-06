@@ -190,7 +190,7 @@ InfJump.Name = "InfJump"
 InfJump.Parent = Frame
 InfJump.BackgroundColor3 = Color3.fromRGB(0,0,0)
 InfJump.Position = UDim2.new(-0.001, 0,0.504, 0)
-InfJump.Size = UDim2.new(0, 233,0, 62)
+InfJump.Size = UDim2.new(0, 223,0, 62)
 InfJump.Font = Enum.Font.Sarpanch
 InfJump.Text = "InfJump"
 InfJump.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -377,7 +377,7 @@ UserInputServer.InputBegan:Connect(function(input, gameProcessedEvent)
 		return 
 	end
 
-	if input.KeyCode == Enum.KeyCode.LeftShift then
+	if input.KeyCode == Enum.KeyCode.R then
 		if Frame.Visible == true then
 			Frame.Visible = false
 		else
