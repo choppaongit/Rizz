@@ -176,7 +176,7 @@ Uninject.MouseButton1Click:Connect(function()
 	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
 	isAutoToxicEnabled = false
 	game.Workspace.CurrentCamera.FieldOfView = 70
-	NOFLY()
+	FLYING = false
 	isNoclipping = false
 	noclipConnection:Disconnect()
 	YTScriptHub:Destroy()
