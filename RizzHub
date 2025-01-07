@@ -10,6 +10,7 @@ local Uninject = Instance.new("TextButton")
 local InfJump = Instance.new("TextButton")
 local FlyBtn = Instance.new("TextButton")
 local ESP = Instance.new("TextButton")
+local AimbotBTN = Instance.new("TextButton")
 local RunService = game:GetService("RunService")
 local NoClip = Instance.new("TextButton")
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
@@ -169,31 +170,6 @@ local espEnabled = false
 local infJump
 infJumpDebounce = false
 
-Uninject.Name = "Uninject"
-Uninject.Parent = Frame
-Uninject.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Uninject.Position = UDim2.new(0.314, 0,0.889, 0)
-Uninject.Size = UDim2.new(0, 223,0, 62)
-Uninject.Font = Enum.Font.Sarpanch
-Uninject.Text = "Uninject"
-Uninject.TextColor3 = Color3.fromRGB(255, 255, 255)
-Uninject.TextScaled = true
-Uninject.TextSize = 14.000
-Uninject.TextWrapped = true
-
-Uninject.MouseButton1Click:Connect(function()
-	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
-	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
-	isAutoToxicEnabled = false
-	game.Workspace.CurrentCamera.FieldOfView = 70
-	FLYING = false
-	espEnabled = false
-	isNoclipping = false
-	if infJump then infJump:Disconnect()
-	end
-	isAutoToxicEnabled = false
-	YTScriptHub:Destroy()
-end)
 
 InfJump.Name = "InfJump"
 InfJump.Parent = Frame
@@ -210,15 +186,15 @@ InfJump.TextWrapped = true
 
 
 InfJump.MouseButton1Click:Connect(function()
-		if infJump then infJump:Disconnect() end
-		infJumpDebounce = false
-		infJump = UserInputServer.JumpRequest:Connect(function()
-			if not infJumpDebounce then
-				infJumpDebounce = true
-				game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
-				wait()
+	if infJump then infJump:Disconnect() end
+	infJumpDebounce = false
+	infJump = UserInputServer.JumpRequest:Connect(function()
+		if not infJumpDebounce then
+			infJumpDebounce = true
+			game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+			wait()
 			infJumpDebounce = false
-			end
+		end
 	end)
 end)
 
@@ -395,9 +371,6 @@ UserInputServer.InputBegan:Connect(function(input, gameProcessedEvent)
 	end
 end)
 
-espTransparency = 0.3
-ESPenabled = false
-CHMSenabled = false
 
 ESP.Name = "Esp"
 ESP.Parent = Frame
@@ -411,279 +384,355 @@ ESP.TextScaled = true
 ESP.TextSize = 14.000
 ESP.TextWrapped = true
 
+local LocalPlayer = Players.LocalPlayer
 
-
-
-ESP.MouseButton1Click:Connect(function()
-	-- Toggle the espEnabled variable
-	espEnabled = not espEnabled
-
-	-- Clear existing ESP if disabling
-	if not espEnabled then
-		for _, plr in ipairs(Players:GetPlayers()) do
-			if plr ~= Players.LocalPlayer then
-				for _, child in ipairs(COREGUI:GetChildren()) do
-					if child.Name == plr.Name .. "_ESP" then
-						child:Destroy()
-					end
-				end
-			end
+local function highlightPlayer(player)
+	if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+		local existingHighlight = player.Character:FindFirstChild("Highlight")
+		if not existingHighlight then
+			local highlight = Instance.new("Highlight")
+			highlight.Adornee = player.Character
+			highlight.FillColor = player.TeamColor.Color
+			highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- White outline
+			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			highlight.Name = "Highlight"
+			highlight.Parent = player.Character
 		end
 	end
+end
 
-	-- Enable/Disable ESP for all players
-	for _, plr in ipairs(Players:GetPlayers()) do
-		if plr ~= Players.LocalPlayer and espEnabled then
-			ESP(plr) 
+-- Function to remove highlights from a player
+local function removeHighlight(player)
+	if player.Character and player.Character:FindFirstChild("Highlight") then
+		player.Character:FindFirstChild("Highlight"):Destroy()
+	end
+end
+
+-- Function to handle ESP button clicks
+ESP.MouseButton1Click:Connect(function()
+	espEnabled = not espEnabled
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer then
+			if espEnabled then
+				highlightPlayer(player)
+			else
+				removeHighlight(player)
+			end
 		end
 	end
 end)
 
-function round(num, numDecimalPlaces)
-	local mult = 10^(numDecimalPlaces or 0)
-	return math.floor(num * mult + 0.5) / mult
+-- Listen for new players joining and update their highlight status
+Players.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Connect(function(character)
+		if espEnabled then
+			highlightPlayer(player)
+		end
+	end)
+end)
+
+
+AimbotBTN.Name = "Aimbot"
+AimbotBTN.Parent = Frame
+AimbotBTN.BackgroundColor3 = Color3.fromRGB(0,0,0)
+AimbotBTN.Position = UDim2.new(0.342,0,0.111,0)
+AimbotBTN.Size = UDim2.new(0, 223,0, 62)
+AimbotBTN.Font = Enum.Font.Sarpanch
+AimbotBTN.Text = "Aimbot(press twice)"
+AimbotBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
+AimbotBTN.TextScaled = true
+AimbotBTN.TextSize = 14.000
+AimbotBTN.TextWrapped = true
+
+--// Cache
+
+local select = select
+local pcall, getgenv, next, Vector2, mathclamp, type, mousemoverel = select(1, pcall, getgenv, next, Vector2.new, math.clamp, type, mousemoverel or (Input and Input.MouseMove))
+
+--// Preventing Multiple Processes
+
+pcall(function()
+	getgenv().Aimbot.Functions:Exit()
+end)
+
+--// Environment
+
+getgenv().Aimbot = {}
+local Environment = getgenv().Aimbot
+
+--// Services
+
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local Camera = workspace.CurrentCamera
+
+
+--// Variables
+
+local RequiredDistance, Typing, Running, Animation, ServiceConnections = 2000, false, false, nil, {}
+
+--// Script Settings
+
+Environment.Settings = {
+	Enabled = true,
+	TeamCheck = false,
+	AliveCheck = true,
+	WallCheck = false, -- Laggy
+	Sensitivity = 0, -- Animation length (in seconds) before fully locking onto target
+	ThirdPerson = false, -- Uses mousemoverel instead of CFrame to support locking in third person (could be choppy)
+	ThirdPersonSensitivity = 3, -- Boundary: 0.1 - 5
+	TriggerKey = "MouseButton2",
+	Toggle = false,
+	LockPart = "Head" -- Body part to lock on
+}
+
+Environment.FOVSettings = {
+	Enabled = true,
+	Visible = true,
+	Amount = 90,
+	Color = Color3.fromRGB(85, 255, 0),
+	LockedColor = Color3.fromRGB(255, 0, 0),
+	Transparency = 1,
+	Sides = 60,
+	Thickness = 1,
+	Filled = false
+}
+
+
+
+--// Functions
+
+local function CancelLock()
+	Environment.Locked = nil
+	if Animation then Animation:Cancel() end
+	Environment.FOVCircle.Color = Environment.FOVSettings.Color
 end
 
-function ESP(plr)
-	task.spawn(function()
-		for i,v in pairs(COREGUI:GetChildren()) do
-			if v.Name == plr.Name..'_ESP' then
-				v:Destroy()
-			end
-		end
-		wait()
-		if plr.Character and plr.Name ~= Players.LocalPlayer.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
-			local ESPholder = Instance.new("Folder")
-			ESPholder.Name = plr.Name..'_ESP'
-			ESPholder.Parent = COREGUI
-			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-			for b,n in pairs (plr.Character:GetChildren()) do
-				if (n:IsA("BasePart")) then
-					local a = Instance.new("BoxHandleAdornment")
-					a.Name = plr.Name
-					a.Parent = ESPholder
-					a.Adornee = n
-					a.AlwaysOnTop = true
-					a.ZIndex = 10
-					a.Size = n.Size
-					a.Transparency = espTransparency
-					a.Color = plr.TeamColor
+local function GetClosestPlayer()
+	if not Environment.Locked then
+		RequiredDistance = (Environment.FOVSettings.Enabled and Environment.FOVSettings.Amount or 2000)
+
+		for _, v in next, Players:GetPlayers() do
+			if v ~= LocalPlayer then
+				if v.Character and v.Character:FindFirstChild(Environment.Settings.LockPart) and v.Character:FindFirstChildOfClass("Humanoid") then
+					if Environment.Settings.TeamCheck and v.Team == LocalPlayer.Team then continue end
+					if Environment.Settings.AliveCheck and v.Character:FindFirstChildOfClass("Humanoid").Health <= 0 then continue end
+					if Environment.Settings.WallCheck and #(Camera:GetPartsObscuringTarget({v.Character[Environment.Settings.LockPart].Position}, v.Character:GetDescendants())) > 0 then continue end
+
+					local Vector, OnScreen = Camera:WorldToViewportPoint(v.Character[Environment.Settings.LockPart].Position)
+					local Distance = (Vector2(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2(Vector.X, Vector.Y)).Magnitude
+
+					if Distance < RequiredDistance and OnScreen then
+						RequiredDistance = Distance
+						Environment.Locked = v
+					end
 				end
 			end
-			if plr.Character and plr.Character:FindFirstChild('Head') then
-				local BillboardGui = Instance.new("BillboardGui")
-				local TextLabel = Instance.new("TextLabel")
-				BillboardGui.Adornee = plr.Character.Head
-				BillboardGui.Name = plr.Name
-				BillboardGui.Parent = ESPholder
-				BillboardGui.Size = UDim2.new(0, 100, 0, 150)
-				BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
-				BillboardGui.AlwaysOnTop = true
-				TextLabel.Parent = BillboardGui
-				TextLabel.BackgroundTransparency = 1
-				TextLabel.Position = UDim2.new(0, 0, 0, -50)
-				TextLabel.Size = UDim2.new(0, 100, 0, 100)
-				TextLabel.Font = Enum.Font.SourceSansSemibold
-				TextLabel.TextSize = 20
-				TextLabel.TextColor3 = Color3.new(1, 1, 1)
-				TextLabel.TextStrokeTransparency = 0
-				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-				TextLabel.Text = plr.Name
-				TextLabel.ZIndex = 10
-				local espLoopFunc
-				local teamChange
-				local addedFunc
-				addedFunc = plr.CharacterAdded:Connect(function()
-					if ESPenabled then
-						espLoopFunc:Disconnect()
-						teamChange:Disconnect()
-						ESPholder:Destroy()
-						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-						ESP(plr)
-						addedFunc:Disconnect()
+		end
+	elseif (Vector2(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2(Camera:WorldToViewportPoint(Environment.Locked.Character[Environment.Settings.LockPart].Position).X, Camera:WorldToViewportPoint(Environment.Locked.Character[Environment.Settings.LockPart].Position).Y)).Magnitude > RequiredDistance then
+		CancelLock()
+	end
+end
+
+--// Typing Check
+
+ServiceConnections.TypingStartedConnection = UserInputService.TextBoxFocused:Connect(function()
+	Typing = true
+end)
+
+ServiceConnections.TypingEndedConnection = UserInputService.TextBoxFocusReleased:Connect(function()
+	Typing = false
+end)
+
+--// Main
+
+local function Load()
+	ServiceConnections.RenderSteppedConnection = RunService.RenderStepped:Connect(function()
+		if Environment.FOVSettings.Enabled and Environment.Settings.Enabled then
+			Environment.FOVCircle.Radius = Environment.FOVSettings.Amount
+			Environment.FOVCircle.Thickness = Environment.FOVSettings.Thickness
+			Environment.FOVCircle.Filled = Environment.FOVSettings.Filled
+			Environment.FOVCircle.Color = Environment.FOVSettings.Color
+			Environment.FOVCircle.Transparency = Environment.FOVSettings.Transparency
+			Environment.FOVCircle.Visible = Environment.FOVSettings.Visible
+			Environment.FOVCircle.Position = Vector2(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+		else
+			Environment.FOVCircle.Visible = false
+		end
+
+		if Running and Environment.Settings.Enabled then
+			GetClosestPlayer()
+
+			if Environment.Locked then
+				if Environment.Settings.ThirdPerson then
+					Environment.Settings.ThirdPersonSensitivity = mathclamp(Environment.Settings.ThirdPersonSensitivity, 0.1, 5)
+
+					local Vector = Camera:WorldToViewportPoint(Environment.Locked.Character[Environment.Settings.LockPart].Position)
+					mousemoverel((Vector.X - UserInputService:GetMouseLocation().X) * Environment.Settings.ThirdPersonSensitivity, (Vector.Y - UserInputService:GetMouseLocation().Y) * Environment.Settings.ThirdPersonSensitivity)
+				else
+					if Environment.Settings.Sensitivity > 0 then
+						Animation = TweenService:Create(Camera, TweenInfo.new(Environment.Settings.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, Environment.Locked.Character[Environment.Settings.LockPart].Position)})
+						Animation:Play()
 					else
-						teamChange:Disconnect()
-						addedFunc:Disconnect()
+						Camera.CFrame = CFrame.new(Camera.CFrame.Position, Environment.Locked.Character[Environment.Settings.LockPart].Position)
 					end
-				end)
-				teamChange = plr:GetPropertyChangedSignal("TeamColor"):Connect(function()
-					if ESPenabled then
-						espLoopFunc:Disconnect()
-						addedFunc:Disconnect()
-						ESPholder:Destroy()
-						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-						ESP(plr)
-						teamChange:Disconnect()
-					else
-						teamChange:Disconnect()
-					end
-				end)
-				local function espLoop()
-					if COREGUI:FindFirstChild(plr.Name..'_ESP') then
-						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid") and Players.LocalPlayer.Character and getRoot(Players.LocalPlayer.Character) and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-							local pos = math.floor((getRoot(Players.LocalPlayer.Character).Position - getRoot(plr.Character).Position).magnitude)
+				end
+
+				Environment.FOVCircle.Color = Environment.FOVSettings.LockedColor
+
+			end
+		end
+	end)
+
+	ServiceConnections.InputBeganConnection = UserInputService.InputBegan:Connect(function(Input)
+		if not Typing then
+			pcall(function()
+				if Input.KeyCode == Enum.KeyCode[Environment.Settings.TriggerKey] then
+					if Environment.Settings.Toggle then
+						Running = not Running
+
+						if not Running then
+							CancelLock()
 						end
 					else
-						teamChange:Disconnect()
-						addedFunc:Disconnect()
-						espLoopFunc:Disconnect()
+						Running = true
 					end
 				end
-				espLoopFunc = RunService.RenderStepped:Connect(espLoop)
-			end
-		end
-	end)
-end
+			end)
 
-function CHMS(plr)
-	task.spawn(function()
-		for i,v in pairs(COREGUI:GetChildren()) do
-			if v.Name == plr.Name..'_CHMS' then
-				v:Destroy()
-			end
-		end
-		wait()
-		if plr.Character and plr.Name ~= Players.LocalPlayer.Name and not COREGUI:FindFirstChild(plr.Name..'_CHMS') then
-			local ESPholder = Instance.new("Folder")
-			ESPholder.Name = plr.Name..'_CHMS'
-			ESPholder.Parent = COREGUI
-			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-			for b,n in pairs (plr.Character:GetChildren()) do
-				if (n:IsA("BasePart")) then
-					local a = Instance.new("BoxHandleAdornment")
-					a.Name = plr.Name
-					a.Parent = ESPholder
-					a.Adornee = n
-					a.AlwaysOnTop = true
-					a.ZIndex = 10
-					a.Size = n.Size
-					a.Transparency = espTransparency
-					a.Color = plr.TeamColor
-				end
-			end
-			local addedFunc
-			local teamChange
-			local CHMSremoved
-			addedFunc = plr.CharacterAdded:Connect(function()
-				if CHMSenabled then
-					ESPholder:Destroy()
-					teamChange:Disconnect()
-					repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-					CHMS(plr)
-					addedFunc:Disconnect()
-				else
-					teamChange:Disconnect()
-					addedFunc:Disconnect()
-				end
-			end)
-			teamChange = plr:GetPropertyChangedSignal("TeamColor"):Connect(function()
-				if CHMSenabled then
-					ESPholder:Destroy()
-					addedFunc:Disconnect()
-					repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-					CHMS(plr)
-					teamChange:Disconnect()
-				else
-					teamChange:Disconnect()
-				end
-			end)
-			CHMSremoved = ESPholder.AncestryChanged:Connect(function()
-				teamChange:Disconnect()
-				addedFunc:Disconnect()
-				CHMSremoved:Disconnect()
-			end)
-		end
-	end)
-end
+			pcall(function()
+				if Input.UserInputType == Enum.UserInputType[Environment.Settings.TriggerKey] then
+					if Environment.Settings.Toggle then
+						Running = not Running
 
-function Locate(plr)
-	task.spawn(function()
-		for i,v in pairs(COREGUI:GetChildren()) do
-			if v.Name == plr.Name..'_LC' then
-				v:Destroy()
-			end
-		end
-		wait()
-		if plr.Character and plr.Name ~= Players.LocalPlayer.Name and not COREGUI:FindFirstChild(plr.Name..'_LC') then
-			local ESPholder = Instance.new("Folder")
-			ESPholder.Name = plr.Name..'_LC'
-			ESPholder.Parent = COREGUI
-			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-			for b,n in pairs (plr.Character:GetChildren()) do
-				if (n:IsA("BasePart")) then
-					local a = Instance.new("BoxHandleAdornment")
-					a.Name = plr.Name
-					a.Parent = ESPholder
-					a.Adornee = n
-					a.AlwaysOnTop = true
-					a.ZIndex = 10
-					a.Size = n.Size
-					a.Transparency = espTransparency
-					a.Color = plr.TeamColor
-				end
-			end
-			if plr.Character and plr.Character:FindFirstChild('Head') then
-				local BillboardGui = Instance.new("BillboardGui")
-				local TextLabel = Instance.new("TextLabel")
-				BillboardGui.Adornee = plr.Character.Head
-				BillboardGui.Name = plr.Name
-				BillboardGui.Parent = ESPholder
-				BillboardGui.Size = UDim2.new(0, 100, 0, 150)
-				BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
-				BillboardGui.AlwaysOnTop = true
-				TextLabel.Parent = BillboardGui
-				TextLabel.BackgroundTransparency = 1
-				TextLabel.Position = UDim2.new(0, 0, 0, -50)
-				TextLabel.Size = UDim2.new(0, 100, 0, 100)
-				TextLabel.Font = Enum.Font.SourceSansSemibold
-				TextLabel.TextSize = 20
-				TextLabel.TextColor3 = Color3.new(1, 1, 1)
-				TextLabel.TextStrokeTransparency = 0
-				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-				TextLabel.Text = 'Name: '..plr.Name
-				TextLabel.ZIndex = 10
-				local lcLoopFunc
-				local addedFunc
-				local teamChange
-				addedFunc = plr.CharacterAdded:Connect(function()
-					if ESPholder ~= nil and ESPholder.Parent ~= nil then
-						lcLoopFunc:Disconnect()
-						teamChange:Disconnect()
-						ESPholder:Destroy()
-						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-						Locate(plr)
-						addedFunc:Disconnect()
-					else
-						teamChange:Disconnect()
-						addedFunc:Disconnect()
-					end
-				end)
-				teamChange = plr:GetPropertyChangedSignal("TeamColor"):Connect(function()
-					if ESPholder ~= nil and ESPholder.Parent ~= nil then
-						lcLoopFunc:Disconnect()
-						addedFunc:Disconnect()
-						ESPholder:Destroy()
-						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid")
-						Locate(plr)
-						teamChange:Disconnect()
-					else
-						teamChange:Disconnect()
-					end
-				end)
-				local function lcLoop()
-					if COREGUI:FindFirstChild(plr.Name..'_LC') then
-						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass("Humanoid") and Players.LocalPlayer.Character and getRoot(Players.LocalPlayer.Character) and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-							local pos = math.floor((getRoot(Players.LocalPlayer.Character).Position - getRoot(plr.Character).Position).magnitude)
-							TextLabel.Text = 'Name: '..plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass('Humanoid').Health, 1)..' | Studs: '..pos
+						if not Running then
+							CancelLock()
 						end
 					else
-						teamChange:Disconnect()
-						addedFunc:Disconnect()
-						lcLoopFunc:Disconnect()
+						Running = true
 					end
 				end
-				lcLoopFunc = RunService.RenderStepped:Connect(lcLoop)
+			end)
+		end
+	end)
+
+	ServiceConnections.InputEndedConnection = UserInputService.InputEnded:Connect(function(Input)
+		if not Typing then
+			if not Environment.Settings.Toggle then
+				pcall(function()
+					if Input.KeyCode == Enum.KeyCode[Environment.Settings.TriggerKey] then
+						Running = false; CancelLock()
+					end
+				end)
+
+				pcall(function()
+					if Input.UserInputType == Enum.UserInputType[Environment.Settings.TriggerKey] then
+						Running = false; CancelLock()
+					end
+				end)
 			end
 		end
 	end)
 end
+
+--// Functions
+
+Environment.Functions = {}
+
+function Environment.Functions:Exit()
+	for _, v in next, ServiceConnections do
+		v:Disconnect()
+	end
+
+	if Environment.FOVCircle.Remove then Environment.FOVCircle:Remove() end
+
+	getgenv().Aimbot.Functions = nil
+	getgenv().Aimbot = nil
+
+	Load = nil; GetClosestPlayer = nil; CancelLock = nil
+end
+
+function Environment.Functions:Restart()
+	for _, v in next, ServiceConnections do
+		v:Disconnect()
+	end
+
+end
+
+function Environment.Functions:ResetSettings()
+	Environment.Settings = {
+		Enabled = false,
+		TeamCheck = false,
+		AliveCheck = true,
+		WallCheck = false,
+		Sensitivity = 0, -- Animation length (in seconds) before fully locking onto target
+		ThirdPerson = false, -- Uses mousemoverel instead of CFrame to support locking in third person (could be choppy)
+		ThirdPersonSensitivity = 3, -- Boundary: 0.1 - 5
+		TriggerKey = "MouseButton2",
+		Toggle = false,
+		LockPart = "Head" -- Body part to lock on
+	}
+
+	Environment.FOVSettings = {
+		Enabled = false,
+		Visible = true,
+		Amount = 90,
+		Color = Color3.fromRGB(255, 255, 255),
+		LockedColor = Color3.fromRGB(255, 70, 70),
+		Transparency = 0.5,
+		Sides = 60,
+		Thickness = 1,
+		Filled = false
+	}
+end
+
+AimbotBTN.MouseButton1Click:Connect(function()
+	Environment.Settings.Enabled = not Environment.Settings.Enabled 
+	if Environment.Settings.Enabled then
+		Environment.FOVCircle = Drawing.new("Circle")
+		Load() 
+	else
+
+	end
+end)
+
+
+
+Uninject.Name = "Uninject"
+Uninject.Parent = Frame
+Uninject.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Uninject.Position = UDim2.new(0.314, 0,0.889, 0)
+Uninject.Size = UDim2.new(0, 262,0, 40)
+Uninject.Font = Enum.Font.Sarpanch
+Uninject.Text = "Uninject"
+Uninject.TextColor3 = Color3.fromRGB(255, 255, 255)
+Uninject.TextScaled = true
+Uninject.TextSize = 14.000
+Uninject.TextWrapped = true
+
+Uninject.MouseButton1Click:Connect(function()
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
+	isAutoToxicEnabled = false
+	game.Workspace.CurrentCamera.FieldOfView = 70
+	FLYING = false
+	if espEnabled then espEnabled = not espEnabled end
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer then
+			if espEnabled then
+				highlightPlayer(player)
+			else
+				removeHighlight(player)
+			end
+		end
+	end
+	isNoclipping = false
+	if infJump then infJump:Disconnect()
+	end
+	if Environment.Settings.Enabled then Environment.Settings.Enabled  = not Environment.Settings.Enabled  end
+
+		isAutoToxicEnabled = false
+		YTScriptHub:Destroy()
+end)
