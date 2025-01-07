@@ -734,8 +734,8 @@ Uninject.MouseButton1Click:Connect(function()
 	end
 	if Environment.Settings.Enabled then Environment.Settings.Enabled  = not Environment.Settings.Enabled  end
 
-		isAutoToxicEnabled = false
-		YTScriptHub:Destroy()
+	isAutoToxicEnabled = false
+	YTScriptHub:Destroy()
 end)
 
 Rejoin.Name = "Rejoin"
@@ -750,6 +750,11 @@ Rejoin.TextScaled = true
 Rejoin.TextSize = 14.000
 Rejoin.TextWrapped = true
 
+local ts = game:GetService("TeleportService")
+
+local p = game:GetService("Players").LocalPlayer
+
+
 Rejoin.MouseButton1Click:Connect(function()
-	
+	ts:Teleport(game.PlaceId, p)
 end)
