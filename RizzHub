@@ -2,7 +2,6 @@
 local YTScriptHub = Instance.new("ScreenGui")
 local Frame = Instance.new("TextLabel")
 local TextLabel = Instance.new("TextLabel")
-local Instruction = Instance.new("TextLabel")
 local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
 local HigherJump = Instance.new("TextButton")
@@ -720,7 +719,7 @@ Uninject.TextWrapped = true
 Uninject.MouseButton1Click:Connect(function()
 	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
 	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
-	isAutoToxicEnabled = false
+	if isAutoToxicEnabled then isAutoToxicEnabled = not isAutoToxicEnabled end
 	game.Workspace.CurrentCamera.FieldOfView = 70
 	FLYING = false
 	if espEnabled then espEnabled = not espEnabled end
