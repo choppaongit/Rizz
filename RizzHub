@@ -46,24 +46,13 @@ Frame.BackgroundTransparency = 0
 TextLabel.Parent = Frame
 TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.BackgroundTransparency = 1.000
-TextLabel.Size = UDim2.new(0, 107,0, 26)
+TextLabel.Size = UDim2.new(0, 707,0, 26)
 TextLabel.Font = Enum.Font.Sarpanch
-TextLabel.Text = "Rizz Hub"
+TextLabel.Text = "Rizz Hub         PRESS 'N' KEY TO HIDE UI, IF A BUTTON DOESN'T WORK PRESS IT AGAIN"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
 TextLabel.TextWrapped = true
-
-Instruction.Parent = Frame
-Instruction.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Instruction.BackgroundTransparency = 1.000
-Instruction.Size = UDim2.new(0, 107,0, 26)
-Instruction.Font = Enum.Font.Sarpanch
-Instruction.Text = "PRESS "N" TO HIDE UI, IF A BUTTON DOESN'T WORK PRESS IT AGAIN"
-Instruction.TextColor3 = Color3.fromRGB(255, 255, 255)
-Instruction.TextScaled = true
-Instruction.TextSize = 14.000
-Instruction.TextWrapped = true
 
 BloodGui.Name = "Sprint"
 BloodGui.Parent = Frame
