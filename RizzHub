@@ -750,7 +750,6 @@ Rejoin.TextScaled = true
 Rejoin.TextSize = 14.000
 Rejoin.TextWrapped = true
 
-
 Rejoin.MouseButton1Click:Connect(function()
+	
 end)
-
