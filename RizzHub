@@ -135,33 +135,29 @@ AutoToxic.TextScaled = true
 AutoToxic.TextSize = 14.000
 AutoToxic.TextWrapped = true
 
-local isAutoToxicEnabled = false -- track whether the AutoToxic feature is enabled or not
-local autoToxicCoroutine -- reference to the coroutine that sends the message repeatedly
+local isAutoToxicEnabled = false
+local autoToxicCoroutine
 
--- function that sends the "Blackerson On Top" message repeatedly
 local function sendAutoToxicMessage()
 	while isAutoToxicEnabled do
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Get Rizzed With RizzHub | RizzHub On Top", "All")
-		wait(2)
+		wait(2) 
 	end
 end
 
-
--- handle the AutoToxic button click
 AutoToxic.MouseButton1Click:Connect(function()
-	isAutoToxicEnabled = not isAutoToxicEnabled -- toggle the feature status
+	isAutoToxicEnabled = not isAutoToxicEnabled
 
 	if isAutoToxicEnabled then
-		-- start the coroutine if it's not running
 		if not autoToxicCoroutine then
 			autoToxicCoroutine = coroutine.create(sendAutoToxicMessage)
 			coroutine.resume(autoToxicCoroutine)
 		end
 	else
-		-- stop the coroutine if it's running
 		if autoToxicCoroutine then
-			coroutine.yield(autoToxicCoroutine)
-			autoToxicCoroutine = nil
+			-- Properly stop the coroutine
+			isAutoToxicEnabled = false -- Ensure the loop condition is false
+			autoToxicCoroutine = nil 
 		end
 	end
 end)
@@ -719,7 +715,7 @@ Uninject.TextWrapped = true
 Uninject.MouseButton1Click:Connect(function()
 	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
 	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
-	if isAutoToxicEnabled then isAutoToxicEnabled = not isAutoToxicEnabled end
+	isAutoToxicEnabled = false
 	game.Workspace.CurrentCamera.FieldOfView = 70
 	FLYING = false
 	if espEnabled then espEnabled = not espEnabled end
