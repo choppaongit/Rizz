@@ -2,6 +2,7 @@
 local YTScriptHub = Instance.new("ScreenGui")
 local Frame = Instance.new("TextLabel")
 local TextLabel = Instance.new("TextLabel")
+local Instruction = Instance.new("TextLabel")
 local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
 local HigherJump = Instance.new("TextButton")
@@ -14,6 +15,8 @@ local Rejoin = Instance.new("TextButton")
 local AimbotBTN = Instance.new("TextButton")
 local RunService = game:GetService("RunService")
 local NoClip = Instance.new("TextButton")
+local AutoParry = Instance.new("TextButton")
+local FpsCounter = Instance.new("TextButton")
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 local UserInputServer = game:GetService("UserInputService")
 COREGUI = (game:GetService("CoreGui"))
@@ -29,6 +32,7 @@ YTScriptHub.Name = "RizzHub"
 YTScriptHub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 YTScriptHub.ResetOnSpawn = false
 YTScriptHub.IgnoreGuiInset = false
+
 
 Frame.Parent = YTScriptHub
 Frame.BackgroundColor3 = Color3.fromRGB(39, 39, 39)
@@ -49,6 +53,17 @@ TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
 TextLabel.TextWrapped = true
+
+Instruction.Parent = Frame
+Instruction.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Instruction.BackgroundTransparency = 1.000
+Instruction.Size = UDim2.new(0, 107,0, 26)
+Instruction.Font = Enum.Font.Sarpanch
+Instruction.Text = "PRESS "N" TO HIDE UI, IF A BUTTON DOESN'T WORK PRESS IT AGAIN"
+Instruction.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instruction.TextScaled = true
+Instruction.TextSize = 14.000
+Instruction.TextWrapped = true
 
 BloodGui.Name = "Sprint"
 BloodGui.Parent = Frame
@@ -440,7 +455,7 @@ AimbotBTN.BackgroundColor3 = Color3.fromRGB(0,0,0)
 AimbotBTN.Position = UDim2.new(0.342,0,0.111,0)
 AimbotBTN.Size = UDim2.new(0, 223,0, 62)
 AimbotBTN.Font = Enum.Font.Sarpanch
-AimbotBTN.Text = "Aimbot(press twice)"
+AimbotBTN.Text = "Aimbot"
 AimbotBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
 AimbotBTN.TextScaled = true
 AimbotBTN.TextSize = 14.000
@@ -733,7 +748,7 @@ Uninject.MouseButton1Click:Connect(function()
 	if infJump then infJump:Disconnect()
 	end
 	if Environment.Settings.Enabled then Environment.Settings.Enabled  = not Environment.Settings.Enabled  end
-
+	FpsCounter:Destroy()
 	isAutoToxicEnabled = false
 	YTScriptHub:Destroy()
 end)
@@ -757,4 +772,116 @@ local p = game:GetService("Players").LocalPlayer
 
 Rejoin.MouseButton1Click:Connect(function()
 	ts:Teleport(game.PlaceId, p)
+end)
+
+AutoParry.Name = "AutoParry(BladeBall)"
+AutoParry.Parent = Frame
+AutoParry.BackgroundColor3 = Color3.fromRGB(0,0,0)
+AutoParry.Position = UDim2.new(0.342, 0,0.504, 0)
+AutoParry.Size = UDim2.new(0, 223,0, 62)
+AutoParry.Font = Enum.Font.Sarpanch
+AutoParry.Text = "AutoParry(BladeBall)"
+AutoParry.TextColor3 = Color3.fromRGB(255, 255, 255)
+AutoParry.TextScaled = true
+AutoParry.TextSize = 14.000
+AutoParry.TextWrapped = true
+
+local RunService = game:GetService("RunService") or game:FindFirstDescendant("RunService")
+local Players = game:GetService("Players") or game:FindFirstDescendant("Players")
+local VirtualInputManager = game:GetService("VirtualInputManager") or game:FindFirstDescendant("VirtualInputManager")
+
+local Player = Players.LocalPlayer
+
+local Cooldown = tick()
+local IsParried = false
+local Connection = nil
+
+AutoParry.MouseButton1Click:Connect(function()
+	local function GetBall()
+		for _, Ball in ipairs(workspace.Balls:GetChildren()) do
+			if Ball:GetAttribute("realBall") then
+				return Ball
+			end
+		end
+	end
+
+	local function ResetConnection()
+		if Connection then
+			Connection:Disconnect()
+			Connection = nil
+		end
+	end
+
+	workspace.Balls.ChildAdded:Connect(function()
+		local Ball = GetBall()
+		if not Ball then return end
+		ResetConnection()
+		Connection = Ball:GetAttributeChangedSignal("target"):Connect(function()
+			Parried = false
+		end)
+	end)
+
+	RunService.PreSimulation:Connect(function()
+		local Ball, HRP = GetBall(), Player.Character.HumanoidRootPart
+		if not Ball or not HRP then
+			return
+		end
+
+		local Speed = Ball.zoomies.VectorVelocity.Magnitude
+		local Distance = (HRP.Position - Ball.Position).Magnitude
+
+		if Ball:GetAttribute("target") == Player.Name and not Parried and Distance / Speed <= 0.55 then
+			VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+			Parried = true
+			Cooldown = tick()
+
+			if (tick() - Cooldown) >= 1 then
+				Partied = false
+			end
+		end
+	end)
+end)
+
+
+FpsCounter.Name = "FpsCounter"
+FpsCounter.Parent = Frame
+FpsCounter.BackgroundColor3 = Color3.fromRGB(0,0,0)
+FpsCounter.Position = UDim2.new(0.342,0,0.697,0)
+FpsCounter.Size = UDim2.new(0, 223,0, 62)
+FpsCounter.Font = Enum.Font.Sarpanch
+FpsCounter.Text = "FpsCounter"
+FpsCounter.TextColor3 = Color3.fromRGB(255, 255, 255)
+FpsCounter.TextScaled = true
+FpsCounter.TextSize = 14.000
+FpsCounter.TextWrapped = true
+
+FpsCounter.MouseButton1Click:Connect(function()
+	repeat wait() until game:IsLoaded() wait(2)
+	local ScreenGui = Instance.new("ScreenGui")
+	local Fps = Instance.new("TextLabel")
+	local uistroke = Instance.new("UIStroke", Fps)
+
+	--Properties:
+
+	ScreenGui.Parent = game.CoreGui
+	ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	Fps.Name = "Fps"
+	Fps.Parent = ScreenGui
+	Fps.BackgroundTransparency = 1.000
+	Fps.Position = UDim2.new(0.87, 0, 0.485, 0)
+	Fps.Size = UDim2.new(0, 134, 0, 32)
+	Fps.Font = Enum.Font.SourceSans
+	Fps.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Fps.TextScaled = true
+	Fps.TextSize = 14.000
+	Fps.TextWrapped = true
+
+	-- Scripts:
+
+	local script = Instance.new('LocalScript', Fps)
+	local RunService = game:GetService("RunService")
+	RunService.RenderStepped:Connect(function(frame) -- This will fire every time a frame is rendered
+		script.Parent.Text = ("FPS: "..math.round(1/frame)) 
+	end)
 end)
