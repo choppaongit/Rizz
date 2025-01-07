@@ -702,7 +702,7 @@ Rejoin.MouseButton1Click:Connect(function()
 	ts:Teleport(game.PlaceId, p)
 end)
 
-AutoParry.Name = "AutoParry(BladeBall)"
+AutoParry.Name = "AutoParry(doesn't work)"
 AutoParry.Parent = Frame
 AutoParry.BackgroundColor3 = Color3.fromRGB(0,0,0)
 AutoParry.Position = UDim2.new(0.342, 0,0.504, 0)
