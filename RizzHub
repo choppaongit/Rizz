@@ -20,6 +20,10 @@ local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.Place
 local UserInputServer = game:GetService("UserInputService")
 COREGUI = (game:GetService("CoreGui"))
 
+local Players = game.Players
+
+local LocalPlayer = Players.LocalPlayer
+
 function getRoot(char)
 	local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
 	return rootPart
@@ -165,7 +169,6 @@ end)
 local isNoclipping = false
 local noclipConnection
 
-local espEnabled = false
 
 local infJump
 infJumpDebounce = false
@@ -362,74 +365,13 @@ UserInputServer.InputBegan:Connect(function(input, gameProcessedEvent)
 		return 
 	end
 
-	if input.KeyCode == Enum.KeyCode.R then
+	if input.KeyCode == Enum.KeyCode.N then
 		if Frame.Visible == true then
 			Frame.Visible = false
 		else
 			Frame.Visible = true
 		end
 	end
-end)
-
-
-ESP.Name = "Esp"
-ESP.Parent = Frame
-ESP.BackgroundColor3 = Color3.fromRGB(0,0,0)
-ESP.Position = UDim2.new(0.683, 0,0.697, 0)
-ESP.Size = UDim2.new(0, 223,0, 62)
-ESP.Font = Enum.Font.Sarpanch
-ESP.Text = "Esp"
-ESP.TextColor3 = Color3.fromRGB(255, 255, 255)
-ESP.TextScaled = true
-ESP.TextSize = 14.000
-ESP.TextWrapped = true
-
-local LocalPlayer = Players.LocalPlayer
-
-local function highlightPlayer(player)
-	if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-		local existingHighlight = player.Character:FindFirstChild("Highlight")
-		if not existingHighlight then
-			local highlight = Instance.new("Highlight")
-			highlight.Adornee = player.Character
-			highlight.FillColor = player.TeamColor.Color
-			highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- White outline
-			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-			highlight.Name = "Highlight"
-			highlight.Parent = player.Character
-		end
-	end
-end
-
--- Function to remove highlights from a player
-local function removeHighlight(player)
-	if player.Character and player.Character:FindFirstChild("Highlight") then
-		player.Character:FindFirstChild("Highlight"):Destroy()
-	end
-end
-
--- Function to handle ESP button clicks
-ESP.MouseButton1Click:Connect(function()
-	espEnabled = not espEnabled
-
-	for _, player in ipairs(Players:GetPlayers()) do
-		if player ~= LocalPlayer then
-			if espEnabled then
-				highlightPlayer(player)
-			else
-				removeHighlight(player)
-			end
-		end
-	end
-end)
-
--- Listen for new players joining and update their highlight status
-Players.PlayerAdded:Connect(function(player)
-	player.CharacterAdded:Connect(function(character)
-		if espEnabled then
-			highlightPlayer(player)
-		end
-	end)
 end)
 
 
@@ -712,6 +654,8 @@ Uninject.TextScaled = true
 Uninject.TextSize = 14.000
 Uninject.TextWrapped = true
 
+
+
 Uninject.MouseButton1Click:Connect(function()
 	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
 	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
@@ -867,5 +811,81 @@ FpsCounter.MouseButton1Click:Connect(function()
 	local RunService = game:GetService("RunService")
 	RunService.RenderStepped:Connect(function(frame) -- This will fire every time a frame is rendered
 		script.Parent.Text = ("FPS: "..math.round(1/frame)) 
+	end)
+end)
+
+
+ESP.Name = "Esp"
+ESP.Parent = Frame
+ESP.BackgroundColor3 = Color3.fromRGB(0,0,0)
+ESP.Position = UDim2.new(0.683, 0,0.697, 0)
+ESP.Size = UDim2.new(0, 223,0, 62)
+ESP.Font = Enum.Font.Sarpanch
+ESP.Text = "Esp"
+ESP.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESP.TextScaled = true
+ESP.TextSize = 14.000
+ESP.TextWrapped = true
+
+
+
+ function highlightPlayer(player)
+	if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+		local existingHighlight = player.Character:FindFirstChild("Highlight")
+		if not existingHighlight then
+			local highlight = Instance.new("Highlight")
+			highlight.Adornee = player.Character
+			highlight.FillColor = player.TeamColor.Color
+			highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- White outline
+			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			highlight.Name = "Highlight"
+			highlight.Parent = player.Character
+		end
+	end
+end
+
+-- Function to remove highlights from a player
+ function removeHighlight(player)
+	if player.Character and player.Character:FindFirstChild("Highlight") then
+		player.Character:FindFirstChild("Highlight"):Destroy()
+	end
+end
+
+local espEnabled = false
+
+
+-- Function to handle ESP button clicks
+ESP.MouseButton1Click:Connect(function()
+	espEnabled = not espEnabled
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer then
+			if espEnabled then
+				highlightPlayer(player)
+			else
+				removeHighlight(player)
+			end
+		end
+	end
+end)
+
+while true do
+	wait(0.1) -- Check every 0.1 seconds
+
+	if espEnabled then
+		for _, player in ipairs(Players:GetPlayers()) do
+			if player ~= LocalPlayer then
+				highlightPlayer(player) 
+			end
+		end
+	end
+end
+
+-- Listen for new players joining and update their highlight status
+Players.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Connect(function(character)
+		if espEnabled then
+			highlightPlayer(player)
+		end
 	end)
 end)
