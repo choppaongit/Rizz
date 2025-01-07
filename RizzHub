@@ -1,7 +1,11 @@
 
 local YTScriptHub = Instance.new("ScreenGui")
-local Frame = Instance.new("TextLabel")
+local Frame = Instance.new("ScrollingFrame")
 local TextLabel = Instance.new("TextLabel")
+local Combatlabel = Instance.new("TextLabel")
+local Clientlabel = Instance.new("TextLabel")
+local Misclabel = Instance.new("TextLabel")
+local OthersLabel = Instance.new("TextLabel")
 local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
 local HigherJump = Instance.new("TextButton")
@@ -9,16 +13,24 @@ local AutoToxic = Instance.new("TextButton")
 local Uninject = Instance.new("TextButton")
 local InfJump = Instance.new("TextButton")
 local FlyBtn = Instance.new("TextButton")
-local ESP = Instance.new("TextButton")
+local EspButton = Instance.new("TextButton")
 local Rejoin = Instance.new("TextButton")
 local AimbotBTN = Instance.new("TextButton")
 local RunService = game:GetService("RunService")
 local NoClip = Instance.new("TextButton")
-local AutoParry = Instance.new("TextButton")
+local ChatMurdAndSheriff = Instance.new("TextButton")
 local FpsCounter = Instance.new("TextButton")
+local uiframstroke = Instance.new("UIStroke", Frame)
+local uigl = Instance.new("UIGridLayout", Frame)
+local uiframecorner = Instance.new("UICorner", Frame)
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 local UserInputServer = game:GetService("UserInputService")
 COREGUI = (game:GetService("CoreGui"))
+local uicorner = Instance.new("UICorner")
+local uistroke = Instance.new("UIStroke")
+uistroke.Color = Color3.fromRGB(76,76,76)
+uistroke.Thickness = 5
+uistroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 local Players = game.Players
 
@@ -31,6 +43,19 @@ end
 
 --Properties:
 
+uiframstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+uiframstroke.Color = Color3.fromRGB(76,76,76)
+uiframstroke.Thickness = 5
+
+uiframecorner.CornerRadius = UDim.new(0,8)
+
+uigl.CellPadding = UDim2.new(1,0,0.015,0)
+uigl.CellSize = UDim2.new(0.94,0,0.03,0)
+uigl.SortOrder = Enum.SortOrder.Name
+uigl.FillDirection = Enum.FillDirection.Horizontal
+uigl. HorizontalAlignment = Enum.HorizontalAlignment.Center
+uigl.VerticalAlignment = Enum.VerticalAlignment.Top
+
 YTScriptHub.Name = "RizzHub"
 YTScriptHub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 YTScriptHub.ResetOnSpawn = false
@@ -40,16 +65,15 @@ YTScriptHub.IgnoreGuiInset = false
 Frame.Parent = YTScriptHub
 Frame.BackgroundColor3 = Color3.fromRGB(39, 39, 39)
 Frame.Position = UDim2.new(0.174, 0,0.084, 0)
-Frame.Size = UDim2.new(0, 707,0, 364)
+Frame.Size = UDim2.new(0, 707,0, 483)
 Frame.Active = true
 Frame.Draggable = true
-Frame.BorderColor3 = Color3.fromRGB(39, 39, 39)
 Frame.BackgroundTransparency = 0
 
+TextLabel.Name = "a"
 TextLabel.Parent = Frame
 TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.BackgroundTransparency = 1.000
-TextLabel.Size = UDim2.new(0, 707,0, 26)
 TextLabel.Font = Enum.Font.Sarpanch
 TextLabel.Text = "Rizz Hub         PRESS 'N' KEY TO HIDE UI, IF A BUTTON DOESN'T WORK PRESS IT AGAIN"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -57,17 +81,61 @@ TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
 TextLabel.TextWrapped = true
 
-BloodGui.Name = "Sprint"
+Combatlabel.Name = "a"
+Combatlabel.Parent = Frame
+Combatlabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Combatlabel.BackgroundTransparency = 1.000
+Combatlabel.Font = Enum.Font.Sarpanch
+Combatlabel.Text = "Combat⚔"
+Combatlabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+Combatlabel.TextScaled = true
+Combatlabel.TextSize = 14.000
+Combatlabel.TextWrapped = true
+
+Clientlabel.Name = "d"
+Clientlabel.Parent = Frame
+Clientlabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Clientlabel.BackgroundTransparency = 1.000
+Clientlabel.Font = Enum.Font.Sarpanch
+Clientlabel.Text = "Client🖥"
+Clientlabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+Clientlabel.TextScaled = true
+Clientlabel.TextSize = 14.000
+Clientlabel.TextWrapped = true
+
+Misclabel.Name = "f"
+Misclabel.Parent = Frame
+Misclabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Misclabel.BackgroundTransparency = 1.000
+Misclabel.Font = Enum.Font.Sarpanch
+Misclabel.Text = "Misc💿"
+Misclabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+Misclabel.TextScaled = true
+Misclabel.TextSize = 14.000
+Misclabel.TextWrapped = true
+
+OthersLabel.Name = "h"
+OthersLabel.Parent = Frame
+OthersLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+OthersLabel.BackgroundTransparency = 1.000
+OthersLabel.Font = Enum.Font.Sarpanch
+OthersLabel.Text = "Others🔧"
+OthersLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+OthersLabel.TextScaled = true
+OthersLabel.TextSize = 14.000
+OthersLabel.TextWrapped = true
+
+BloodGui.Name = "e"
 BloodGui.Parent = Frame
-BloodGui.BackgroundColor3 = Color3.fromRGB(0,0,0)
-BloodGui.Position = UDim2.new(-0.001, 0,0.111, 0)
-BloodGui.Size = UDim2.new(0, 223,0, 62)
+BloodGui.BackgroundColor3 = Color3.fromRGB(45,45,45)
 BloodGui.Font = Enum.Font.Sarpanch
 BloodGui.Text = "Speed"
 BloodGui.TextColor3 = Color3.fromRGB(255, 255, 255)
 BloodGui.TextScaled = true
 BloodGui.TextSize = 14.000
 BloodGui.TextWrapped = true
+uicorner:Clone().Parent = BloodGui
+uistroke:Clone().Parent = BloodGui
 
 local isFast = false
 BloodGui.MouseButton1Click:Connect(function()
@@ -79,17 +147,17 @@ BloodGui.MouseButton1Click:Connect(function()
 	isFast = not isFast
 end)
 
-Fov.Name = "Fov"
+Fov.Name = "e"
 Fov.Parent = Frame
-Fov.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Fov.Position = UDim2.new(0.683, 0,0.111, 0)
-Fov.Size = UDim2.new(0, 223,0, 62)
+Fov.BackgroundColor3 = Color3.fromRGB(45,45,45)
 Fov.Font = Enum.Font.Sarpanch
 Fov.Text = "Fov"
 Fov.TextColor3 = Color3.fromRGB(255, 255, 255)
 Fov.TextScaled = true
 Fov.TextSize = 14.000
 Fov.TextWrapped = true
+uicorner.Parent = Fov
+uistroke.Parent = Fov
 
 local fovValue = 70
 
@@ -102,17 +170,17 @@ Fov.MouseButton1Click:Connect(function()
 	game.Workspace.CurrentCamera.FieldOfView = fovValue
 end)
 
-HigherJump.Name = "HigherJump"
+HigherJump.Name = "e"
 HigherJump.Parent = Frame
-HigherJump.BackgroundColor3 = Color3.fromRGB(0,0,0)
-HigherJump.Position = UDim2.new(-0.001, 0,0.306, 0)
-HigherJump.Size = UDim2.new(0, 223,0, 62)
+HigherJump.BackgroundColor3 = Color3.fromRGB(45,45,45)
 HigherJump.Font = Enum.Font.Sarpanch
 HigherJump.Text = "HigherJump"
 HigherJump.TextColor3 = Color3.fromRGB(255, 255, 255)
 HigherJump.TextScaled = true
 HigherJump.TextSize = 14.000
 HigherJump.TextWrapped = true
+uicorner:Clone().Parent = HigherJump
+uistroke:Clone().Parent = HigherJump
 
 local isHigherJump = false
 
@@ -127,17 +195,17 @@ end
 
 HigherJump.MouseButton1Click:Connect(toggleHigherJump)
 
-AutoToxic.Name = "AutoToxic"
+AutoToxic.Name = "g"
 AutoToxic.Parent = Frame
-AutoToxic.BackgroundColor3 = Color3.fromRGB(0,0,0)
-AutoToxic.Position = UDim2.new(0.685, 0,0.306, 0)
-AutoToxic.Size = UDim2.new(0, 223,0, 62)
+AutoToxic.BackgroundColor3 = Color3.fromRGB(45,45,45)
 AutoToxic.Font = Enum.Font.Sarpanch
 AutoToxic.Text = "AutoToxic(legacy chat)"
 AutoToxic.TextColor3 = Color3.fromRGB(255, 255, 255)
 AutoToxic.TextScaled = true
 AutoToxic.TextSize = 14.000
 AutoToxic.TextWrapped = true
+uicorner:Clone().Parent = AutoToxic
+uistroke:Clone().Parent = AutoToxic
 
 local isAutoToxicEnabled = false
 local autoToxicCoroutine
@@ -174,18 +242,17 @@ local infJump
 infJumpDebounce = false
 
 
-InfJump.Name = "InfJump"
+InfJump.Name = "e"
 InfJump.Parent = Frame
-InfJump.BackgroundColor3 = Color3.fromRGB(0,0,0)
-InfJump.Position = UDim2.new(-0.001, 0,0.504, 0)
-InfJump.Size = UDim2.new(0, 223,0, 62)
+InfJump.BackgroundColor3 = Color3.fromRGB(45,45,45)
 InfJump.Font = Enum.Font.Sarpanch
 InfJump.Text = "InfJump"
 InfJump.TextColor3 = Color3.fromRGB(255, 255, 255)
 InfJump.TextScaled = true
 InfJump.TextSize = 14.000
 InfJump.TextWrapped = true
-
+uicorner:Clone().Parent = InfJump
+uistroke:Clone().Parent = InfJump
 
 
 InfJump.MouseButton1Click:Connect(function()
@@ -201,18 +268,17 @@ InfJump.MouseButton1Click:Connect(function()
 	end)
 end)
 
-NoClip.Name = "NoClip"
+NoClip.Name = "g"
 NoClip.Parent = Frame
-NoClip.BackgroundColor3 = Color3.fromRGB(0,0,0)
-NoClip.Position = UDim2.new(0.685, 0,0.504, 0)
-NoClip.Size = UDim2.new(0, 223,0, 62)
+NoClip.BackgroundColor3 = Color3.fromRGB(45,45,45)
 NoClip.Font = Enum.Font.Sarpanch
 NoClip.Text = "NoClip"
 NoClip.TextColor3 = Color3.fromRGB(255, 255, 255)
 NoClip.TextScaled = true
 NoClip.TextSize = 14.000
 NoClip.TextWrapped = true
-
+uicorner:Clone().Parent = InfJump
+uistroke:Clone().Parent = InfJump
 
 
 local function NoclipLoop()
@@ -237,17 +303,17 @@ NoClip.MouseButton1Click:Connect(function()
 	end
 end)
 
-FlyBtn.Name = "Fly"
+FlyBtn.Name = "e"
 FlyBtn.Parent = Frame
-FlyBtn.BackgroundColor3 = Color3.fromRGB(0,0,0)
-FlyBtn.Position = UDim2.new(-0.001, 0,0.697, 0)
-FlyBtn.Size = UDim2.new(0, 223,0, 62)
+FlyBtn.BackgroundColor3 = Color3.fromRGB(45,45,45)
 FlyBtn.Font = Enum.Font.Sarpanch
 FlyBtn.Text = "Fly"
 FlyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 FlyBtn.TextScaled = true
 FlyBtn.TextSize = 14.000
 FlyBtn.TextWrapped = true
+uicorner:Clone().Parent = FlyBtn
+uistroke:Clone().Parent = FlyBtn
 
 
 FlyBtn.MouseButton1Click:Connect(function()
@@ -375,17 +441,17 @@ UserInputServer.InputBegan:Connect(function(input, gameProcessedEvent)
 end)
 
 
-AimbotBTN.Name = "Aimbot"
+AimbotBTN.Name = "c"
 AimbotBTN.Parent = Frame
-AimbotBTN.BackgroundColor3 = Color3.fromRGB(0,0,0)
-AimbotBTN.Position = UDim2.new(0.342,0,0.111,0)
-AimbotBTN.Size = UDim2.new(0, 223,0, 62)
+AimbotBTN.BackgroundColor3 = Color3.fromRGB(45,45,45)
 AimbotBTN.Font = Enum.Font.Sarpanch
 AimbotBTN.Text = "Aimbot"
 AimbotBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
 AimbotBTN.TextScaled = true
 AimbotBTN.TextSize = 14.000
 AimbotBTN.TextWrapped = true
+uicorner:Clone().Parent = AimbotBTN
+uistroke:Clone().Parent = AimbotBTN
 
 --// Cache
 
@@ -640,19 +706,19 @@ AimbotBTN.MouseButton1Click:Connect(function()
 	end
 end)
 
+local espEnabled = false
 
-
-Uninject.Name = "Uninject"
+Uninject.Name = "l"
 Uninject.Parent = Frame
-Uninject.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Uninject.Position = UDim2.new(0.314, 0,0.889, 0)
-Uninject.Size = UDim2.new(0, 262,0, 40)
+Uninject.BackgroundColor3 = Color3.fromRGB(45,45,45)
 Uninject.Font = Enum.Font.Sarpanch
 Uninject.Text = "Uninject"
 Uninject.TextColor3 = Color3.fromRGB(255, 255, 255)
 Uninject.TextScaled = true
 Uninject.TextSize = 14.000
 Uninject.TextWrapped = true
+uicorner:Clone().Parent = Uninject
+uistroke:Clone().Parent = Uninject
 
 
 
@@ -681,17 +747,17 @@ Uninject.MouseButton1Click:Connect(function()
 	YTScriptHub:Destroy()
 end)
 
-Rejoin.Name = "Rejoin"
+Rejoin.Name = "g"
 Rejoin.Parent = Frame
-Rejoin.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Rejoin.Position = UDim2.new(0.342,0,0.306,0)
-Rejoin.Size = UDim2.new(0, 223,0, 62)
+Rejoin.BackgroundColor3 = Color3.fromRGB(45,45,45)
 Rejoin.Font = Enum.Font.Sarpanch
 Rejoin.Text = "Rejoin"
 Rejoin.TextColor3 = Color3.fromRGB(255, 255, 255)
 Rejoin.TextScaled = true
 Rejoin.TextSize = 14.000
 Rejoin.TextWrapped = true
+uicorner:Clone().Parent = Rejoin
+uistroke:Clone().Parent = Rejoin
 
 local ts = game:GetService("TeleportService")
 
@@ -702,29 +768,65 @@ Rejoin.MouseButton1Click:Connect(function()
 	ts:Teleport(game.PlaceId, p)
 end)
 
-AutoParry.Name = "AutoParry(doesn't work)"
-AutoParry.Parent = Frame
-AutoParry.BackgroundColor3 = Color3.fromRGB(0,0,0)
-AutoParry.Position = UDim2.new(0.342, 0,0.504, 0)
-AutoParry.Size = UDim2.new(0, 223,0, 62)
-AutoParry.Font = Enum.Font.Sarpanch
-AutoParry.Text = "AutoParry(doesn't work)"
-AutoParry.TextColor3 = Color3.fromRGB(255, 255, 255)
-AutoParry.TextScaled = true
-AutoParry.TextSize = 14.000
-AutoParry.TextWrapped = true
+ChatMurdAndSheriff.Name = "g"
+ChatMurdAndSheriff.Parent = Frame
+ChatMurdAndSheriff.BackgroundColor3 = Color3.fromRGB(45,45,45)
+ChatMurdAndSheriff.Font = Enum.Font.Sarpanch
+ChatMurdAndSheriff.Text = "ChatMurdAndSheriff(mm2)"
+ChatMurdAndSheriff.TextColor3 = Color3.fromRGB(255, 255, 255)
+ChatMurdAndSheriff.TextScaled = true
+ChatMurdAndSheriff.TextSize = 14.000
+ChatMurdAndSheriff.TextWrapped = true
+uicorner:Clone().Parent = ChatMurdAndSheriff
+uistroke:Clone().Parent = ChatMurdAndSheriff
 
-FpsCounter.Name = "FpsCounter"
+function checkForKnifeInBackpack(player)
+	local textchannel = game:GetService("TextChatService"):WaitForChild("TextChannels"):WaitForChild("RBXGeneral")
+	local hasKnife = false
+	local hasGun = false
+
+	-- Check player's backpack for a knife
+	for _, item in pairs(player.Backpack:GetChildren()) do 
+		if item.Name == "Knife" then 
+			hasKnife = true
+			break 
+		end
+	end
+	
+	for _, item in pairs(player.Backpack:GetChildren()) do 
+		if item.Name == "Gun" then 
+			hasGun = true
+			break 
+		end
+	end
+
+	if hasKnife then
+		local message = player.Name .. " is the murderer!"
+		textchannel:SendAsync(message) 
+	end
+	if hasGun then
+		local message = player.Name .. " is the sheriff!"
+		textchannel:SendAsync(message) 
+	end
+end
+
+ChatMurdAndSheriff.MouseButton1Click:Connect(function()
+	for _, player in ipairs(game.Players:GetPlayers()) do 
+		checkForKnifeInBackpack(player) 
+	end
+end)
+
+FpsCounter.Name = "e"
 FpsCounter.Parent = Frame
-FpsCounter.BackgroundColor3 = Color3.fromRGB(0,0,0)
-FpsCounter.Position = UDim2.new(0.342,0,0.697,0)
-FpsCounter.Size = UDim2.new(0, 223,0, 62)
+FpsCounter.BackgroundColor3 = Color3.fromRGB(45,45,45)
 FpsCounter.Font = Enum.Font.Sarpanch
 FpsCounter.Text = "FpsCounter"
 FpsCounter.TextColor3 = Color3.fromRGB(255, 255, 255)
 FpsCounter.TextScaled = true
 FpsCounter.TextSize = 14.000
 FpsCounter.TextWrapped = true
+uicorner:Clone().Parent = FpsCounter
+uistroke:Clone().Parent = FpsCounter
 
 FpsCounter.MouseButton1Click:Connect(function()
 	repeat wait() until game:IsLoaded() wait(2)
@@ -758,18 +860,17 @@ FpsCounter.MouseButton1Click:Connect(function()
 end)
 
 
-ESP.Name = "Esp"
-ESP.Parent = Frame
-ESP.BackgroundColor3 = Color3.fromRGB(0,0,0)
-ESP.Position = UDim2.new(0.683, 0,0.697, 0)
-ESP.Size = UDim2.new(0, 223,0, 62)
-ESP.Font = Enum.Font.Sarpanch
-ESP.Text = "Esp"
-ESP.TextColor3 = Color3.fromRGB(255, 255, 255)
-ESP.TextScaled = true
-ESP.TextSize = 14.000
-ESP.TextWrapped = true
-
+EspButton.Name = "c"
+EspButton.Parent = Frame
+EspButton.BackgroundColor3 = Color3.fromRGB(45,45,45)
+EspButton.Font = Enum.Font.Sarpanch
+EspButton.Text = "ESP"
+EspButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+EspButton.TextScaled = true
+EspButton.TextSize = 14.000
+EspButton.TextWrapped = true
+uicorner:Clone().Parent = EspButton
+uistroke:Clone().Parent = EspButton
 
 
 function highlightPlayer(player)
@@ -778,7 +879,30 @@ function highlightPlayer(player)
 		if not existingHighlight then
 			local highlight = Instance.new("Highlight")
 			highlight.Adornee = player.Character
-			highlight.FillColor = player.TeamColor.Color
+			-- Check if the player's backpack has a Gun
+			local hasGun = false
+			for _, item in ipairs(player.Backpack:GetChildren()) do
+				if item.Name == "Gun" then
+					hasGun = true
+
+					break
+				end
+			end
+			-- Check if the player's backpack has a Knife
+			local hasKnife = false
+			for _, item in ipairs(player.Backpack:GetChildren()) do
+				if item.Name == "Knife" then
+					hasKnife = true
+					break
+				end
+			end
+			if hasGun then
+				highlight.FillColor = Color3.fromRGB(0, 0, 255) -- Blue
+			elseif hasKnife then
+				highlight.FillColor = Color3.fromRGB(255, 0, 0) -- Red
+			else
+				highlight.FillColor = player.TeamColor.Color
+			end
 			highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- White outline
 			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 			highlight.Name = "Highlight"
@@ -787,6 +911,7 @@ function highlightPlayer(player)
 	end
 end
 
+
 -- Function to remove highlights from a player
 function removeHighlight(player)
 	if player.Character and player.Character:FindFirstChild("Highlight") then
@@ -794,11 +919,9 @@ function removeHighlight(player)
 	end
 end
 
-local espEnabled = false
-
 
 -- Function to handle ESP button clicks
-ESP.MouseButton1Click:Connect(function()
+EspButton.MouseButton1Click:Connect(function()
 	espEnabled = not espEnabled
 
 	for _, player in ipairs(Players:GetPlayers()) do
