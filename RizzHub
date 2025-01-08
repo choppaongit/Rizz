@@ -8,6 +8,7 @@ local Misclabel = Instance.new("TextLabel")
 local OthersLabel = Instance.new("TextLabel")
 local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
+local Jerk = Instance.new("TextButton")
 local HigherJump = Instance.new("TextButton")
 local AutoToxic = Instance.new("TextButton")
 local Uninject = Instance.new("TextButton")
@@ -277,8 +278,8 @@ NoClip.TextColor3 = Color3.fromRGB(255, 255, 255)
 NoClip.TextScaled = true
 NoClip.TextSize = 14.000
 NoClip.TextWrapped = true
-uicorner:Clone().Parent = InfJump
-uistroke:Clone().Parent = InfJump
+uicorner:Clone().Parent = NoClip
+uistroke:Clone().Parent = NoClip
 
 
 local function NoclipLoop()
@@ -766,6 +767,22 @@ local p = game:GetService("Players").LocalPlayer
 
 Rejoin.MouseButton1Click:Connect(function()
 	ts:Teleport(game.PlaceId, p)
+end)
+
+Jerk.Name = "g"
+Jerk.Parent = Frame
+Jerk.BackgroundColor3 = Color3.fromRGB(45,45,45)
+Jerk.Font = Enum.Font.Sarpanch
+Jerk.Text = "Jerk"
+Jerk.TextColor3 = Color3.fromRGB(255, 255, 255)
+Jerk.TextScaled = true
+Jerk.TextSize = 14.000
+Jerk.TextWrapped = true
+uicorner:Clone().Parent = Jerk
+uistroke:Clone().Parent = Jerk
+
+Jerk.MouseButton1Click:Connect(function()
+	loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
 end)
 
 ChatMurdAndSheriff.Name = "g"
