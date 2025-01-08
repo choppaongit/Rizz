@@ -9,6 +9,7 @@ local OthersLabel = Instance.new("TextLabel")
 local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
 local Jerk = Instance.new("TextButton")
+local Sit = Instance.new("TextButton")
 local HigherJump = Instance.new("TextButton")
 local AutoToxic = Instance.new("TextButton")
 local Uninject = Instance.new("TextButton")
@@ -783,6 +784,22 @@ uistroke:Clone().Parent = Jerk
 
 Jerk.MouseButton1Click:Connect(function()
 	loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+end)
+
+Sit.Name = "g"
+Sit.Parent = Frame
+Sit.BackgroundColor3 = Color3.fromRGB(45,45,45)
+Sit.Font = Enum.Font.Sarpanch
+Sit.Text = "Sit"
+Sit.TextColor3 = Color3.fromRGB(255, 255, 255)
+Sit.TextScaled = true
+Sit.TextSize = 14.000
+Sit.TextWrapped = true
+uicorner:Clone().Parent = Sit
+uistroke:Clone().Parent = Sit
+
+Sit.MouseButton1Click:Connect(function()
+	game.Players.LocalPlayer.Character.Humanoid.Sit = true
 end)
 
 ChatMurdAndSheriff.Name = "g"
