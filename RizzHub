@@ -1,5 +1,5 @@
 
-<!-- local YTScriptHub = Instance.new("ScreenGui")
+local YTScriptHub = Instance.new("ScreenGui")
 local Frame = Instance.new("ScrollingFrame")
 local TextLabel = Instance.new("TextLabel")
 local Combatlabel = Instance.new("TextLabel")
@@ -988,4 +988,4 @@ Players.PlayerAdded:Connect(function(player)
 			highlightPlayer(player)
 		end
 	end)
-end) -->
+end)
