@@ -10,6 +10,7 @@ local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
 local Jerk = Instance.new("TextButton")
 local Sit = Instance.new("TextButton")
+local MobileHide = Instance.new("TextButton", YTScriptHub)
 local HigherJump = Instance.new("TextButton")
 local AutoToxic = Instance.new("TextButton")
 local Uninject = Instance.new("TextButton")
@@ -432,6 +433,18 @@ UserInputServer.InputBegan:Connect(function(input, gameProcessedEvent)
 		else
 			Frame.Visible = true
 		end
+	end
+end)
+
+MobileHide.Position = UDim2.new(0.82, 0,0.437, 0)
+MobileHide.Size = UDim2.new(0, 83,0, 36)
+MobileHide.Text = "HideUi(Mobile)"
+
+MobileHide.MouseButton1Click:Connect(function()
+	if Frame.Visible == true then
+		Frame.Visible = false
+	else
+		Frame.Visible = true
 	end
 end)
 
