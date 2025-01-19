@@ -38,6 +38,9 @@ local Players = game.Players
 
 local LocalPlayer = Players.LocalPlayer
 
+local localPlayer = Players.LocalPlayer
+
+
 function getRoot(char)
 	local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
 	return rootPart
@@ -163,13 +166,9 @@ uistroke.Parent = Fov
 
 local fovValue = 70
 
+
 Fov.MouseButton1Click:Connect(function()
-	if fovValue == 70 then
-		fovValue = 120
-	else
-		fovValue = 70
-	end
-	game.Workspace.CurrentCamera.FieldOfView = fovValue
+toggleFOV()
 end)
 
 HigherJump.Name = "e"
@@ -319,13 +318,7 @@ uistroke:Clone().Parent = FlyBtn
 
 
 FlyBtn.MouseButton1Click:Connect(function()
-	FLYING = not FLYING -- Toggle flying state
-
-	if FLYING then
-		sFLY(true) -- Enable fly mode with vehicle speed
-	else
-		NOFLY() -- Disable fly mode
-	end
+toggleFlight()
 end)
 
 FLYING = false
@@ -725,28 +718,7 @@ uistroke:Clone().Parent = Uninject
 
 
 Uninject.MouseButton1Click:Connect(function()
-	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
-	game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50 
-	isAutoToxicEnabled = false
-	game.Workspace.CurrentCamera.FieldOfView = 70
-	FLYING = false
-	if espEnabled then espEnabled = not espEnabled end
-	for _, player in ipairs(Players:GetPlayers()) do
-		if player ~= LocalPlayer then
-			if espEnabled then
-				highlightPlayer(player)
-			else
-				removeHighlight(player)
-			end
-		end
-	end
-	isNoclipping = false
-	if infJump then infJump:Disconnect()
-	end
-	if Environment.Settings.Enabled then Environment.Settings.Enabled  = not Environment.Settings.Enabled  end
-	FpsCounter:Destroy()
-	isAutoToxicEnabled = false
-	YTScriptHub:Destroy()
+uninject()
 end)
 
 Rejoin.Name = "g"
@@ -968,6 +940,143 @@ EspButton.MouseButton1Click:Connect(function()
 		end
 	end
 end)
+
+local Services = setmetatable({}, {__index = function(Self, Index)
+	local NewService = game.GetService(game, Index)
+	if NewService then
+		Self[Index] = NewService
+	end
+	return NewService
+end})
+
+-- [ LocalPlayer ] --
+local LocalPlayer = Services.Players.LocalPlayer
+
+-- // Functions \\ --
+local function PlayerAdded(Player)
+	local Detected = false
+	local Character;
+	local PrimaryPart;
+
+	local function CharacterAdded(NewCharacter)
+		Character = NewCharacter
+		repeat
+			wait()
+			PrimaryPart = NewCharacter:FindFirstChild("HumanoidRootPart")
+		until PrimaryPart
+		Detected = false
+	end
+
+	CharacterAdded(Player.Character or Player.CharacterAdded:Wait())
+	Player.CharacterAdded:Connect(CharacterAdded)
+	Services.RunService.Heartbeat:Connect(function()
+		if (Character and Character:IsDescendantOf(workspace)) and (PrimaryPart and PrimaryPart:IsDescendantOf(Character)) then
+			if PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 or PrimaryPart.AssemblyLinearVelocity.Magnitude > 100 then
+				if Detected == false then
+					game.StarterGui:SetCore("ChatMakeSystemMessage", {
+						Text = "This Player Has A Fling Exploit: " .. tostring(Player);
+						Color = Color3.fromRGB(255, 255, 255);
+					})
+				end
+				Detected = true
+				for i,v in ipairs(Character:GetDescendants()) do
+					if v:IsA("BasePart") then
+						v.CanCollide = false
+						v.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+						v.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+						v.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+					end
+				end
+				PrimaryPart.CanCollide = false
+				PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+				PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+				PrimaryPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+			end
+		end
+	end)
+end
+
+-- // Event Listeners \\ --
+for i,v in ipairs(Services.Players:GetPlayers()) do
+	if v ~= LocalPlayer then
+		PlayerAdded(v)
+	end
+end
+Services.Players.PlayerAdded:Connect(PlayerAdded)
+
+local LastPosition = nil
+Services.RunService.Heartbeat:Connect(function()
+	pcall(function()
+		local PrimaryPart = LocalPlayer.Character.PrimaryPart
+		if PrimaryPart.AssemblyLinearVelocity.Magnitude > 250 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 250 then
+			PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+			PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+			PrimaryPart.CFrame = LastPosition
+
+			game.StarterGui:SetCore("ChatMakeSystemMessage", {
+				Text = "You Got Flung";
+				Color = Color3.fromRGB(255, 0, 0);
+			})
+		elseif PrimaryPart.AssemblyLinearVelocity.Magnitude < 50 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 then
+			LastPosition = PrimaryPart.CFrame
+		end
+	end)
+end)
+
+function toggleFOV()
+	if game.Workspace.CurrentCamera.FieldOfView == 70 then
+		game.Workspace.CurrentCamera.FieldOfView = 120
+	else
+		game.Workspace.CurrentCamera.FieldOfView = 70
+	end
+end
+
+-- Define a function to handle flight toggling
+function toggleFlight()
+	FLYING = not FLYING
+	if FLYING then
+		sFLY() 
+	else
+		NOFLY()
+	end
+end
+
+-- Define a function to handle "uninject" command
+function uninject()
+	local player = localPlayer.Character.Humanoid
+
+	player.WalkSpeed = 16
+	player.JumpPower = 50
+
+	-- Assuming you have these variables defined elsewhere:
+	isAutoToxicEnabled = false 
+	espEnabled = false 
+	isNoclipping = false 
+	if infJump then infJump:Disconnect() end 
+
+	-- Assuming Environment.Settings and FpsCounter are defined elsewhere
+	if Environment and Environment.Settings then 
+		Environment.Settings.Enabled = not Environment.Settings.Enabled 
+	end
+	if FpsCounter then 
+		FpsCounter:Destroy() 
+	end
+
+	-- Assuming YTScriptHub is defined elsewhere
+	if YTScriptHub then 
+		YTScriptHub:Destroy() 
+	end
+
+	-- Assuming highlightPlayer and removeHighlight are defined elsewhere
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= localPlayer then
+			removeHighlight(player) 
+		end
+	end
+
+	game.Workspace.Camera.FieldOfView = 70
+	FLYING = false 
+end
 
 while true do
 	wait(0.1) -- Check every 0.1 seconds
