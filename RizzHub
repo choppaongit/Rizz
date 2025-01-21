@@ -8,6 +8,8 @@ local Misclabel = Instance.new("TextLabel")
 local OthersLabel = Instance.new("TextLabel")
 local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
+local AutoToxicNew = Instance.new("TextButton")
+local RizzUp = Instance.new("TextButton")
 local Jerk = Instance.new("TextButton")
 local JerkR6 = Instance.new("TextButton")
 local Sit = Instance.new("TextButton")
@@ -19,6 +21,7 @@ local InfJump = Instance.new("TextButton")
 local FlyBtn = Instance.new("TextButton")
 local EspButton = Instance.new("TextButton")
 local Rejoin = Instance.new("TextButton")
+local ServerHop = Instance.new("TextButton")
 local AimbotBTN = Instance.new("TextButton")
 local RunService = game:GetService("RunService")
 local NoClip = Instance.new("TextButton")
@@ -26,6 +29,7 @@ local ChatMurdAndSheriff = Instance.new("TextButton")
 local FpsCounter = Instance.new("TextButton")
 local uiframstroke = Instance.new("UIStroke", Frame)
 local uigl = Instance.new("UIGridLayout", Frame)
+local uiar = Instance.new("UIAspectRatioConstraint", Frame)
 local uiframecorner = Instance.new("UICorner", Frame)
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 local UserInputServer = game:GetService("UserInputService")
@@ -71,8 +75,8 @@ YTScriptHub.IgnoreGuiInset = false
 
 Frame.Parent = YTScriptHub
 Frame.BackgroundColor3 = Color3.fromRGB(39, 39, 39)
-Frame.Position = UDim2.new(0.174, 0,0.084, 0)
-Frame.Size = UDim2.new(0, 707,0, 483)
+Frame.Position = UDim2.new(0.107, 0,0.041, 0)
+Frame.Size = UDim2.new(0, 482,0, 510)
 Frame.Active = true
 Frame.Draggable = true
 Frame.BackgroundTransparency = 0
@@ -126,7 +130,7 @@ OthersLabel.Parent = Frame
 OthersLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 OthersLabel.BackgroundTransparency = 1.000
 OthersLabel.Font = Enum.Font.Sarpanch
-OthersLabel.Text = "Others🔧"
+OthersLabel.Text = "Uninject"
 OthersLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 OthersLabel.TextScaled = true
 OthersLabel.TextSize = 14.000
@@ -233,6 +237,49 @@ AutoToxic.MouseButton1Click:Connect(function()
 			-- Properly stop the coroutine
 			isAutoToxicEnabled = false -- Ensure the loop condition is false
 			autoToxicCoroutine = nil 
+		end
+	end
+end)
+
+-- Initialization
+AutoToxicNew.Name = "g"
+AutoToxicNew.Parent = Frame
+AutoToxicNew.BackgroundColor3 = Color3.fromRGB(45,45,45)
+AutoToxicNew.Font = Enum.Font.Sarpanch
+AutoToxicNew.Text = "AutoToxic(New Chat)"
+AutoToxicNew.TextColor3 = Color3.fromRGB(255, 255, 255)
+AutoToxicNew.TextScaled = true
+AutoToxicNew.TextSize = 14.000
+AutoToxicNew.TextWrapped = true
+uicorner:Clone().Parent = AutoToxicNew
+uistroke:Clone().Parent = AutoToxicNew
+
+
+local isAutoToxicnewEnabled = false
+local autoToxicnewCoroutine
+
+-- Function to send the message using the new TextChatService
+local function sendAutoToxicMessaged()
+	local textchannel = game:GetService("TextChatService"):WaitForChild("TextChannels"):WaitForChild("RBXGeneral")
+
+	local message = "Get Rizzed With RizzHub | RizzHub On Top"
+		textchannel:SendAsync(message) 
+		wait(2)
+	end
+
+-- Handle the AutoToxic button click
+AutoToxicNew.MouseButton1Click:Connect(function()
+	isAutoToxicnewEnabled = not isAutoToxicnewEnabled
+
+	if isAutoToxicnewEnabled then
+		if not autoToxicnewCoroutine then
+			autoToxicnewCoroutine = coroutine.create(sendAutoToxicMessaged)
+			coroutine.resume(autoToxicnewCoroutine)
+		end
+	else
+		if autoToxicnewCoroutine then
+			coroutine.yield(autoToxicnewCoroutine)
+			autoToxicnewCoroutine = nil
 		end
 	end
 end)
@@ -756,6 +803,44 @@ Rejoin.MouseButton1Click:Connect(function()
 	ts:Teleport(game.PlaceId, p)
 end)
 
+ServerHop.Name = "g"
+ServerHop.Parent = Frame
+ServerHop.BackgroundColor3 = Color3.fromRGB(45,45,45)
+ServerHop.Font = Enum.Font.Sarpanch
+ServerHop.Text = "ServerHop"
+ServerHop.TextColor3 = Color3.fromRGB(255, 255, 255)
+ServerHop.TextScaled = true
+ServerHop.TextSize = 14.000
+ServerHop.TextWrapped = true
+uicorner:Clone().Parent = ServerHop
+uistroke:Clone().Parent = ServerHop
+
+ServerHop.MouseButton1Click:Connect(function()
+	local Player = game.Players.LocalPlayer    
+	local Http = game:GetService("HttpService")
+	local TPS = game:GetService("TeleportService")
+	local Api = "https://games.roblox.com/v1/games/"
+
+	local _place,_id = game.PlaceId, game.JobId
+	-- Asc for lowest player count, Desc for highest player count
+	local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=10"
+	function ListServers(cursor)
+		local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+		return Http:JSONDecode(Raw)
+	end
+
+	time_to_wait = 1 --seconds
+
+	-- choose a random server and join every 2 minutes
+	while wait(time_to_wait) do
+		--freeze player before teleporting to prevent synapse crash?
+		Player.Character.HumanoidRootPart.Anchored = true
+		local Servers = ListServers()
+		local Server = Servers.data[math.random(1,#Servers.data)]
+		TPS:TeleportToPlaceInstance(_place, Server.id, Player)
+	end
+end)
+
 Jerk.Name = "g"
 Jerk.Parent = Frame
 Jerk.BackgroundColor3 = Color3.fromRGB(45,45,45)
@@ -892,6 +977,91 @@ FpsCounter.MouseButton1Click:Connect(function()
 	RunService.RenderStepped:Connect(function(frame) -- This will fire every time a frame is rendered
 		script.Parent.Text = ("FPS: "..math.round(1/frame)) 
 	end)
+end)
+
+RizzUp.Name = "g"
+RizzUp.Parent = Frame
+RizzUp.BackgroundColor3 = Color3.fromRGB(45,45,45)
+RizzUp.Font = Enum.Font.Sarpanch
+RizzUp.Text = "RizzUpChat"
+RizzUp.TextColor3 = Color3.fromRGB(255, 255, 255)
+RizzUp.TextScaled = true
+RizzUp.TextSize = 14.000
+RizzUp.TextWrapped = true
+uicorner:Clone().Parent = RizzUp
+uistroke:Clone().Parent = RizzUp
+
+local phrases = {
+	"Are you French? Because Eiffel for you.",
+	"Do you have a map? Because I keep getting lost in your eyes.",
+	"Are you made of copper and tellurium? Because you're Cu-Te.",
+	"Do you believe in love at first sight, or should I walk by again?",
+	"Is your name Google? Because you have everything I’ve been searching for.",
+	"If beauty were a crime, you'd be serving a life sentence.",
+	"Are you a magician? Because whenever I look at you, everyone else disappears.",
+	"Do you have a Band-Aid? Because I just scraped my knee falling for you.",
+	"Is your name Wi-Fi? Because I'm feeling a connection.",
+	"I was blinded by your beauty… I’m going to need your name and number for insurance purposes.",
+	"Are you RizzHub? because you rizzing me up from a hub",
+	"Are you fanum?, because you be taxing my heart",
+	"Eiffel in love... With you.",
+	"You must be a rainbow, because you bring color to my life.",
+	"You’re the reason I believe in magic."
+}
+
+local cooldowns = {}
+local sentMessages = {} -- Track sent messages and their timestamps
+
+-- Initialize cooldown tracker
+for i = 1, #phrases do
+	cooldowns[i] = 0
+end
+
+-- Variables to control chat loop and timing
+local isChatting = false
+local lastChatTime = 0
+local chatInterval = 10
+
+-- Function to select a random phrase
+local function getRandomPhrase()
+	local availablePhrases = {}
+	local currentTime = tick()
+
+	for i, phrase in ipairs(phrases) do
+		if currentTime - cooldowns[i] >= 3600 then
+			if not sentMessages[phrase] or currentTime - sentMessages[phrase] >= 3600 then
+				table.insert(availablePhrases, {index = i, text = phrase})
+			end
+		end
+	end
+
+	if #availablePhrases == 0 then return nil end
+
+	local selected = availablePhrases[math.random(1, #availablePhrases)]
+	cooldowns[selected.index] = currentTime
+	sentMessages[selected.text] = currentTime
+	return selected.text
+end
+
+RizzUp.MouseButton1Click:Connect(function()
+	if not isChatting then
+		isChatting = true
+	else
+		isChatting = false 
+		return 
+	end
+
+	while isChatting do
+		local currentTime = tick()
+		if currentTime - lastChatTime >= chatInterval then
+			local randomPhrase = getRandomPhrase()
+			if randomPhrase then
+				game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(randomPhrase, "All")
+				lastChatTime = currentTime
+			end
+		end
+		wait(0.1)
+	end
 end)
 
 
@@ -1072,6 +1242,7 @@ end
 
 -- Define a function to handle "uninject" command
 function uninject()
+	isChatting = false
 	local player = localPlayer.Character.Humanoid
 
 	player.WalkSpeed = 16
@@ -1079,6 +1250,7 @@ function uninject()
 
 	-- Assuming you have these variables defined elsewhere:
 	isAutoToxicEnabled = false 
+	isAutoToxicnewEnabled = false
 	espEnabled = false 
 	isNoclipping = false 
 	if infJump then infJump:Disconnect() end 
