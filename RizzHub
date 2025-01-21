@@ -9,6 +9,7 @@ local OthersLabel = Instance.new("TextLabel")
 local BloodGui = Instance.new("TextButton")
 local Fov = Instance.new("TextButton")
 local Jerk = Instance.new("TextButton")
+local JerkR6 = Instance.new("TextButton")
 local Sit = Instance.new("TextButton")
 local MobileHide = Instance.new("TextButton", YTScriptHub)
 local HigherJump = Instance.new("TextButton")
@@ -759,7 +760,7 @@ Jerk.Name = "g"
 Jerk.Parent = Frame
 Jerk.BackgroundColor3 = Color3.fromRGB(45,45,45)
 Jerk.Font = Enum.Font.Sarpanch
-Jerk.Text = "Jerk"
+Jerk.Text = "Jerk(r15)"
 Jerk.TextColor3 = Color3.fromRGB(255, 255, 255)
 Jerk.TextScaled = true
 Jerk.TextSize = 14.000
@@ -768,10 +769,25 @@ uicorner:Clone().Parent = Jerk
 uistroke:Clone().Parent = Jerk
 
 Jerk.MouseButton1Click:Connect(function()
-	loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+	loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
 end)
 
-Sit.Name = "g"
+JerkR6.Name = "g"
+JerkR6.Parent = Frame
+JerkR6.BackgroundColor3 = Color3.fromRGB(45,45,45)
+JerkR6.Font = Enum.Font.Sarpanch
+JerkR6.Text = "Jerk(R6)"
+JerkR6.TextColor3 = Color3.fromRGB(255, 255, 255)
+JerkR6.TextScaled = true
+JerkR6.TextSize = 14.000
+JerkR6.TextWrapped = true
+uicorner:Clone().Parent = JerkR6
+uistroke:Clone().Parent = JerkR6
+
+JerkR6.MouseButton1Click:Connect(function()
+	loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+
+end)Sit.Name = "g"
 Sit.Parent = Frame
 Sit.BackgroundColor3 = Color3.fromRGB(45,45,45)
 Sit.Font = Enum.Font.Sarpanch
