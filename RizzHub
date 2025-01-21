@@ -768,7 +768,7 @@ uicorner:Clone().Parent = Jerk
 uistroke:Clone().Parent = Jerk
 
 Jerk.MouseButton1Click:Connect(function()
-	loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+	loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
 end)
 
 Sit.Name = "g"
